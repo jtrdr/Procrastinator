@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fragment_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="@string/bottom_navigation_home_button"/>
+    <item
+        android:id="@+id/fragment_goals"
+        android:enabled="true"
+        android:icon="@drawable/ic_sloth_svg"
+        android:title="@string/bottom_navigation_goals_button"/>
+    <item
+        android:id="@+id/fragment_progress"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_timeline_24"
+        android:title="@string/bottom_navigation_overview_button"/>
+</menu>

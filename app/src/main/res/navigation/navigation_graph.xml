@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/fragment_login">
+
+    <action android:id="@+id/action_global_goalsFragment"
+        app:destination="@+id/fragment_goals"
+        app:launchSingleTop="true"/>
+
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_fragment_home_to_fragment_backdrop"
+            app:destination="@id/fragment_backdrop" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_goals"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.goals.GoalsFragment"
+        android:label="fragment_goals"
+        tools:layout="@layout/fragment_goals" >
+        <action
+            android:id="@+id/action_fragment_goals_to_fragment_backdrop"
+            app:destination="@id/fragment_backdrop" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_progress"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.progress.ProgressFragment"
+        android:label="fragment_progress"
+        tools:layout="@layout/fragment_progress" >
+        <action
+            android:id="@+id/action_fragment_progress_to_fragment_backdrop"
+            app:destination="@id/fragment_backdrop" />
+    </fragment>
+    <activity
+        android:id="@+id/splashScreenActivity"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.SplashScreenActivity"
+        android:label="activity_splashscreen"
+        tools:layout="@layout/activity_splashscreen"></activity>
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_fragment_home"
+            app:destination="@id/fragment_home"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/fragment_home"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_settings"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@xml/root_preferences" />
+    <fragment
+        android:id="@+id/fragment_faq"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.FaqFragment"
+        android:label="fragment_faq"
+        tools:layout="@layout/fragment_faq" />
+    <fragment
+        android:id="@+id/fragment_backdrop"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.BackdropFragment"
+        android:label="fragment_backdrop"
+        tools:layout="@layout/fragment_backdrop">
+        <action
+            android:id="@+id/action_fragment_backdrop_to_settingsFragment"
+            app:destination="@id/fragment_settings" />
+        <action
+            android:id="@+id/action_fragment_backdrop_to_faqFragment"
+            app:destination="@id/fragment_faq" />
+        <action
+            android:id="@+id/action_fragment_backdrop_to_myAccountFragment"
+            app:destination="@id/fragment_myaccount" />
+        <action
+            android:id="@+id/action_fragment_backdrop_to_aboutFragment"
+            app:destination="@id/fragment_about" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_myaccount"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.MyAccountFragment"
+        android:label="fragment_myaccount"
+        tools:layout="@layout/fragment_myaccount" />
+    <fragment
+        android:id="@+id/fragment_about"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" />
+</navigation>

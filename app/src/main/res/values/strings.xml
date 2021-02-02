@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name" translatable="false">Procrastinator</string>
+    <string name="home_fragment_displayname">Welcome, %1$s</string>
+    <string name="goals_fragment_start_timer">start</string>
+    <string name="goals_fragment_reset_timer">reset</string>
+    <string name="goals_fragment_initial_time">5 minute timer</string>
+    <string name="goals_fragment_minute_timer">"%1$d minute timer"</string>
+    <string name="progress_fragment_reset_dailyscore">reset</string>
+    <string name="progress_fragment_progresscircle_text" translatable="false">%1$d %%</string>
+    <string name="textview_score_daily">Daily score: %1$d</string>
+    <string name="textview_score_total">Total score: %1$d</string>
+    <string name="timer_service_notification_title">Proccy-Timer</string>
+    <string name="timer_service_notification_message">"Only %1$d minutes left"</string>
+    <string name="timer_service_notification_message_2">"Less than a minute"</string>
+    <string name="home_fragment_sign_out">Log out</string>
+    <string name="bottom_navigation_home_button">Home</string>
+    <string name="bottom_navigation_goals_button">Proccy</string>
+    <string name="bottom_navigation_overview_button">Overview</string>
+    <string name="progress_fragment_display_date">Today</string>
+
+    <string name="qe1">In a quiet place?</string>
+    <string name="qe2">Are you outside?</string>
+    <string name="qe3">Able to see nature?</string>
+    <string name="qe4">In a place without people?</string>
+
+    <string name="qt1">Lying down?</string>
+    <string name="qt2">Listening to music?</string>
+    <string name="qt3">Got a blanket?</string>
+    <string name="qt4">Drinking coffee or tea?</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

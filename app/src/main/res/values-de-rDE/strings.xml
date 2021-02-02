@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="goals_fragment_start_timer">start</string>
+    <string name="goals_fragment_reset_timer">zurücksetzen</string>
+    <string name="goals_fragment_initial_time">5 Minuten Timer</string>
+    <string name="progress_fragment_reset_dailyscore">zurücksetzen</string>
+    <string name="textview_score_daily">Heute: %1$d</string>
+    <string name="textview_score_total">Gesamt: %1$d</string>
+    <string name="goals_fragment_minute_timer">%1$d Minuten Timer</string>
+    <string name="timer_service_notification_message">Noch %1$d Minuten</string>
+    <string name="timer_service_notification_title">Proccy-Timer</string>
+    <string name="timer_service_notification_message_2">Nur noch weniger als eine Minute</string>
+    <string name="home_fragment_displayname">Willkommen, %1$s</string>
+    <string name="home_fragment_sign_out">Abmelden</string>
+    <string name="bottom_navigation_home_button">Start</string>
+    <string name="bottom_navigation_goals_button">Proccy</string>
+    <string name="bottom_navigation_overview_button">Übersicht</string>
+    <string name="progress_fragment_display_date">Heute</string>
+    <string name="qe1">An einem ruhigen Ort?</string>
+    <string name="qe2">Bist du draußen?</string>
+    <string name="qe3">Siehst du Natur?</string>
+    <string name="qe4">An einem Ort ohne Menschen?</string>
+    <string name="qt1">Liegst du?</string>
+    <string name="qt2">Hörst du Musik?</string>
+    <string name="qt3">Unter einer Decke?</string>
+    <string name="qt4">Trinkst du Kaffee oder Tee?</string>
+</resources>

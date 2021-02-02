@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "219397491375",
+    "project_id": "procrastinator-proccy",
+    "storage_bucket": "procrastinator-proccy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219397491375:android:c481fd704a8dda3574a25a",
+        "android_client_info": {
+          "package_name": "com.kehnestudio.procrastinator_proccy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219397491375-8qf5nv1h73qhsjdptcl46fs658ofm2v6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kehnestudio.procrastinator_proccy",
+            "certificate_hash": "b5773f33c3d69cea52594504df6f2e67f0b61a80"
+          }
+        },
+        {
+          "client_id": "219397491375-pdllfu3k4via0vb6no6uduvu4ljkqofb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCo1DHI5p7NvP6YxieI5DWGVMoV10-eQcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219397491375-pdllfu3k4via0vb6no6uduvu4ljkqofb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
