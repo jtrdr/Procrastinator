@@ -1,11 +1,14 @@
 package com.kehnestudio.procrastinator_proccy.services
 
+import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.CountDownTimer
+import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -106,15 +109,15 @@ class TimerService : LifecycleService() {
     }
 
 
-    private var timerDuration = 1L
-    private val launch = CoroutineScope(Dispatchers.Main)
 
+
+/*
     private fun startTimer() {
         mTimerIsRunning.postValue(true)
         var postedTime: Long
         val totalSeconds = TimeUnit.MINUTES.toSeconds(timerDuration)
         val tickSeconds = 0
-        launch.launch {
+        GlobalScope.launch(Dispatchers.Main) {
             for (second in totalSeconds downTo tickSeconds) {
                 val time = String.format(
                     "%02d:%02d",
@@ -131,9 +134,31 @@ class TimerService : LifecycleService() {
         }
     }
 
+ */
+
+    private var timerDuration = 1L
+    private var timer: CountDownTimer? =null
+
+    private fun startTimer() {
+        Timber.d("Running%s", timerDuration)
+        mTimerIsRunning.postValue(true)
+
+
+        timer = object: CountDownTimer(timerDuration, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timeLeftInMillies.postValue(millisUntilFinished)
+                Timber.d(TimerUtility.getFormattedTimerTime(millisUntilFinished, true))
+            }
+
+            override fun onFinish() {
+                stopService()
+            }
+        }.start()
+    }
+
     private fun stopService() {
         mTimerIsRunning.postValue(false)
-        launch.cancel()
+        timer?.cancel()
         stopSelf()
     }
 
