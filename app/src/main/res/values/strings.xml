@@ -10,7 +10,7 @@
     <string name="textview_score_daily">Daily score: %1$d</string>
     <string name="textview_score_total">Total score: %1$d</string>
     <string name="timer_service_notification_title">Proccy-Timer</string>
-    <string name="timer_service_notification_message">"Only %1$d minutes left"</string>
+    <string name="timer_service_notification_message">Only %1$s minutes left</string>
     <string name="timer_service_notification_message_2">"Less than a minute"</string>
     <string name="home_fragment_sign_out">Log out</string>
     <string name="bottom_navigation_home_button">Home</string>

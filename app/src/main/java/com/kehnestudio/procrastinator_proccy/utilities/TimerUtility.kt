@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy
+package com.kehnestudio.procrastinator_proccy.utilities
 
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

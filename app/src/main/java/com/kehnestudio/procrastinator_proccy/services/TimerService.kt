@@ -3,66 +3,72 @@ package com.kehnestudio.procrastinator_proccy.services
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
-import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.CountDownTimer
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_GOALS_FRAGMENT
+import androidx.lifecycle.Observer
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_START_SERVICE
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_STOP_SERVICE
+import com.kehnestudio.procrastinator_proccy.Constants.EXTRA_TIMER_LENGTH
 import com.kehnestudio.procrastinator_proccy.Constants.NOTIFICATION_CHANNEL_ID
 import com.kehnestudio.procrastinator_proccy.Constants.NOTIFICATION_CHANNEL_NAME
 import com.kehnestudio.procrastinator_proccy.Constants.NOTIFICATION_ID
 import com.kehnestudio.procrastinator_proccy.R
-import com.kehnestudio.procrastinator_proccy.TimerUtility
-import com.kehnestudio.procrastinator_proccy.ui.MainActivity
+import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import timber.log.Timber
-import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.fixedRateTimer
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TimerService : LifecycleService() {
-
-    var isTimerRunning = false
 
     private val timeLeftInMinutes = MutableLiveData<Long>()
 
+    private var passedAction: String? = null
+
+    @Inject
+    lateinit var baseNotificationBuilder: NotificationCompat.Builder
+
+    lateinit var currentNotificationBuilder: NotificationCompat.Builder
+
     companion object {
-        val mTimerIsRunning = MutableLiveData<Boolean>()
+        var mTimerIsRunning = MutableLiveData<Boolean>(false)
         val timeLeftInMillies = MutableLiveData<Long>()
     }
 
     override fun onCreate() {
         super.onCreate()
+        currentNotificationBuilder = baseNotificationBuilder
         postInitialValues()
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        intent?.let {
-            when (it.action) {
+        if (intent != null && intent.extras != null) {
+            passedAction = intent.getStringExtra(ACTION_START_SERVICE)
+            timerDuration = intent.getLongExtra(EXTRA_TIMER_LENGTH, 0)
+            when (passedAction) {
                 ACTION_START_SERVICE -> {
-                    if (!isTimerRunning) {
-                        startForeGroundService()
-                        Timber.d("onStartCommand: Service started")
-                        isTimerRunning = true
-                    } else {
-                        Timber.d("Already running")
-                    }
-                }
-                ACTION_STOP_SERVICE -> {
-                    stopService()
-                    Timber.d("onStartCommand: Service stopped")
-
+                    startForeGroundService()
+                    Timber.d("onStartCommand: Service started")
                 }
                 else -> Timber.d("onStartCommand: Service did nothing")
+            }
+        } else {
+            intent?.let {
+                when (it.action) {
+                    ACTION_STOP_SERVICE -> {
+                        stopService()
+                        Timber.d("onStartCommand: Service stopped")
+                    }
+                }
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -79,36 +85,39 @@ class TimerService : LifecycleService() {
             createNotificationChannel(notificationManager)
         }
 
-        val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setAutoCancel(false)
-            .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_sloth_svg)
-            .setContentTitle("Timer")
-            .setContentText("00:00:00")
-            .setContentIntent(getMainActivityPendingIntent())
+        startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
-        startForeground(NOTIFICATION_ID, notificationBuilder.build())
+        timeLeftInMillies.observe(this, Observer {
+            var timeLeft = TimerUtility.getFormattedTimerTime(it, false)
+            val text = if (timeLeft == "0") {
+                getString(R.string.timer_service_notification_message_2)
+            } else {
+                getString(R.string.timer_service_notification_message, timeLeft)
+            }
+            val notification = currentNotificationBuilder
+                .setContentText(text)
+            notificationManager.notify(NOTIFICATION_ID, notification.build())
+        })
     }
 
     private fun postInitialValues() {
         mTimerIsRunning.postValue(false)
-        timeLeftInMillies.postValue(5000L)
+        timeLeftInMillies.postValue(300000L)
     }
 
-    private var mTimerRunning = false
-    private var timerDuration = 1L
 
+    private var timerDuration = 1L
+    private val launch = CoroutineScope(Dispatchers.Main)
 
     private fun startTimer() {
-        mTimerRunning = true
         mTimerIsRunning.postValue(true)
         var postedTime: Long
-
-        CoroutineScope(Dispatchers.Main).launch {
-            val totalSeconds = TimeUnit.MINUTES.toSeconds(timerDuration)
-            val tickSeconds = 1
+        val totalSeconds = TimeUnit.MINUTES.toSeconds(timerDuration)
+        val tickSeconds = 0
+        launch.launch {
             for (second in totalSeconds downTo tickSeconds) {
-                val time = String.format("%02d:%02d",
+                val time = String.format(
+                    "%02d:%02d",
                     TimeUnit.SECONDS.toMinutes(second),
                     second - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(second))
                 )
@@ -118,23 +127,13 @@ class TimerService : LifecycleService() {
                 delay(1000)
             }
             Timber.d("Done")
+            stopService()
         }
-
     }
 
-
-
-    private fun getMainActivityPendingIntent() = PendingIntent.getActivity(
-        this,
-        0,
-        Intent(this, MainActivity::class.java).also {
-            it.action = ACTION_SHOW_GOALS_FRAGMENT
-        },
-        FLAG_UPDATE_CURRENT
-    )
-
     private fun stopService() {
-        mTimerRunning = false
+        mTimerIsRunning.postValue(false)
+        launch.cancel()
         stopSelf()
     }
 

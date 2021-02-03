@@ -16,14 +16,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearLayoutCheckboxes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_timeLeft"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_refresh">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkBox4"
@@ -59,10 +60,10 @@
         android:text="00:00"
         android:textColor="@android:color/black"
         android:textSize="60sp"
-        app:layout_constraintBottom_toBottomOf="@+id/materialProgressBar"
-        app:layout_constraintEnd_toEndOf="@+id/materialProgressBar"
-        app:layout_constraintStart_toStartOf="@+id/materialProgressBar"
-        app:layout_constraintTop_toTopOf="@+id/materialProgressBar" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/seekBar_timer"
@@ -72,12 +73,10 @@
         android:valueFrom="5.0"
         android:valueTo="30.0"
         app:labelBehavior="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView_timeLeft"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialProgressBar"
-        app:layout_constraintVertical_bias="0.723"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutCheckboxes"
         app:thumbRadius="10dp"
         app:trackHeight="4dp" />
 
@@ -88,10 +87,10 @@
         android:background="@drawable/custom_button_1"
         android:text="@string/goals_fragment_reset_timer"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar_timer"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_start"
-        app:layout_constraintTop_toBottomOf="@+id/materialProgressBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_timeLeft"
         app:srcCompat="@drawable/ic_baseline_stop_24"
         tools:visibility="visible" />
 
@@ -101,20 +100,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button_1"
         android:text="@string/goals_fragment_start_timer"
-        app:layout_constraintBottom_toBottomOf="@+id/button_reset"
-        app:layout_constraintEnd_toStartOf="@+id/button_reset"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button_reset"
-        app:srcCompat="@drawable/ic_baseline_play_arrow_24" />
-
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        style="@style/Widget.MaterialProgressBar.ProgressBar"
-        android:id="@+id/materialProgressBar"
-        android:layout_width="360dp"
-        android:layout_height="360dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_timeLeft"
+        app:srcCompat="@drawable/ic_baseline_play_arrow_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
