@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_GOALS_FRAGMENT
+import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_HOME_FRAGMENT
+import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_LOGIN_FRAGMENT
 import com.kehnestudio.procrastinator_proccy.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_mainactivity.*
@@ -21,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mainactivity)
 
-        if(savedInstanceState==null) {
-            navigateToTrackingFragmentIfNeeded(intent)
+        if (savedInstanceState == null) {
+            navigateToCorrectFragment(intent)
         }
 
         bottomNavigationView.setupWithNavController(
@@ -65,26 +68,32 @@ class MainActivity : AppCompatActivity() {
         val idHost = nav_host_fragment.findNavController().currentDestination?.getId()
 
         when (idHost) {
-            R.id.fragment_home -> finish()
-            R.id.fragment_about -> nav_host_fragment.findNavController()
-                .navigate(R.id.fragment_backdrop)
-            R.id.fragment_faq -> nav_host_fragment.findNavController()
-                .navigate(R.id.fragment_backdrop)
-            R.id.fragment_myaccount -> nav_host_fragment.findNavController()
-                .navigate(R.id.fragment_backdrop)
-            R.id.fragment_settings -> nav_host_fragment.findNavController()
-                .navigate(R.id.fragment_backdrop)
-            else -> nav_host_fragment.findNavController().navigate(R.id.fragment_home)
+            R.id.fragment_home, R.id.fragment_login
+            -> finish()
+
+            R.id.fragment_about, R.id.fragment_faq, R.id.fragment_myaccount, R.id.fragment_settings
+            -> nav_host_fragment.findNavController().navigate(R.id.fragment_backdrop)
+
+            else
+            -> nav_host_fragment.findNavController().navigate(R.id.fragment_home)
         }
     }
 
 
-    private fun navigateToTrackingFragmentIfNeeded(intent: Intent?) {
-        if (intent?.action == ACTION_SHOW_GOALS_FRAGMENT) {
-            nav_host_fragment.findNavController().navigate(R.id.action_global_goalsFragment)
-            Timber.d("Opened goals")
-        } else {
-            nav_host_fragment.findNavController().navigate(R.id.fragment_home)
+    private fun navigateToCorrectFragment(intent: Intent?) {
+        when (intent?.action) {
+            ACTION_SHOW_GOALS_FRAGMENT -> {
+                nav_host_fragment.findNavController().navigate(R.id.action_global_goalsFragment)
+                Timber.d("Opened goals")
+            }
+            ACTION_SHOW_HOME_FRAGMENT -> {
+                nav_host_fragment.findNavController().navigate(R.id.fragment_home)
+                Timber.d("Opened Home")
+            }
+            ACTION_SHOW_LOGIN_FRAGMENT -> {
+                nav_host_fragment.findNavController().navigate(R.id.fragment_login)
+                Timber.d("Opened Login")
+            }
         }
     }
 }
