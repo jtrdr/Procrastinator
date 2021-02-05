@@ -13,4 +13,5 @@ import javax.inject.Provider
 abstract class UserDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
+
 }

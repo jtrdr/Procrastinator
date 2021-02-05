@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.firebase.auth.FirebaseAuth
 import com.kehnestudio.procrastinator_proccy.data.User
 import com.kehnestudio.procrastinator_proccy.databinding.HomeFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,15 +38,16 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        displayNameAndScore()
 
+        displayNameAndScore()
     }
 
     private fun displayNameAndScore(){
-        viewModel.user.observe(requireActivity(), Observer {
-            Timber.d("Timber%s", it.toString())
-            var user:User = it[0]
-            binding.textViewDisplayname.text = user.name
+        viewModel.getUserName()?.observe(requireActivity(), Observer {
+            Timber.d("Observing username%s", it)
+            binding.textViewDisplayname.text = it
         })
     }
+
+
 }

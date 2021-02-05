@@ -7,11 +7,11 @@ import androidx.room.*
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM user_table")
-    fun getUser(): LiveData<List<User>>
+    @Query("SELECT * FROM user_table WHERE id = :uid")
+    fun getSpecificUser(uid: String): LiveData<User>
 
-    @Query("SELECT * FROM user_table WHERE id =:uid")
-    fun getSpecificUser(uid: String): User
+    @Query("SELECT name FROM user_table WHERE id = :uid")
+    fun getUserName(uid: String): LiveData<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: User)

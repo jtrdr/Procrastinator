@@ -19,10 +19,9 @@ class LoginViewModel @ViewModelInject constructor(
     fun insert(user: User) = viewModelScope.launch {
         userRepository.insert(user)
     }
-    fun saveOrUpdateUser(displayname: String, score: Int, id:String){
-        insert(User(displayname, score, id))
-        name.value = null
+    fun saveOrUpdateUser(id:String, name: String){
+        insert(User(id, name))
+        this.name.value = null
         totalScore.value = null
     }
-
 }

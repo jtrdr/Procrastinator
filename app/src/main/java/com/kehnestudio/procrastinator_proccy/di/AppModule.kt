@@ -2,6 +2,7 @@ package com.kehnestudio.procrastinator_proccy.di
 
 import android.app.Application
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
 import com.kehnestudio.procrastinator_proccy.data.UserDao
 import com.kehnestudio.procrastinator_proccy.data.UserDatabase
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository

@@ -31,8 +31,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TimerService : LifecycleService() {
 
-    private val timeLeftInMinutes = MutableLiveData<Long>()
-
     private var passedAction: String? = null
 
     @Inject
