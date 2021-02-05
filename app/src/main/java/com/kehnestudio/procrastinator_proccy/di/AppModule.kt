@@ -2,9 +2,11 @@ package com.kehnestudio.procrastinator_proccy.di
 
 import android.app.Application
 import androidx.room.Room
-import com.google.firebase.auth.FirebaseAuth
-import com.kehnestudio.procrastinator_proccy.data.UserDao
-import com.kehnestudio.procrastinator_proccy.data.UserDatabase
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.kehnestudio.procrastinator_proccy.data.offline.UserDao
+import com.kehnestudio.procrastinator_proccy.data.offline.UserDatabase
+import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -14,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Qualifier
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(ApplicationComponent::class)
@@ -37,6 +40,26 @@ object AppModule {
     ): UserRepository{
         return UserRepository(userDao)
     }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
+
+    @Singleton
+    @Provides
+    fun provideProductsCollectionReference(rootRef: FirebaseFirestore): CollectionReference {
+        return rootRef.collection("users")
+    }
+
+    @Provides
+    fun provideFireStoreRepository(
+        rootRef: CollectionReference
+    ):FireStoreRepository{
+        return FireStoreRepository(rootRef)
+    }
+
 
     //Coroutine lives as long as application because it is a Singleton and this Module is Installed Application Component
     @ApplicationScope

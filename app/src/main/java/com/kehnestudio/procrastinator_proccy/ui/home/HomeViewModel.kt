@@ -1,17 +1,10 @@
 package com.kehnestudio.procrastinator_proccy.ui.home
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.kehnestudio.procrastinator_proccy.data.User
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class HomeViewModel @ViewModelInject constructor(
@@ -23,8 +16,7 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun getSpecificUser() = uid?.let { userRepository.getSpecificUser(it) }
 
-    fun getUserName() = uid?.let { userRepository.getUserName(it) }
-
+    fun getUserWithScoreHistory() = uid?.let { userRepository.getUserWithScoreHistory(it) }
 /*
     fun update(user: User) = viewModelScope.launch {
         userRepository.update(user)

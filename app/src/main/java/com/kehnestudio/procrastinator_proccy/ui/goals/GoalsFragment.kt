@@ -140,6 +140,7 @@ class GoalsFragment : Fragment() {
             sendCommandToService(ACTION_STOP_SERVICE)
         } else {
             Timber.d("Timer already stopped")
+            viewModel.updateScore(25)
         }
     }
 

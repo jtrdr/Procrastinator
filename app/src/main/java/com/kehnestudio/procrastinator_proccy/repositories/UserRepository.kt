@@ -1,9 +1,8 @@
 package com.kehnestudio.procrastinator_proccy.repositories
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.kehnestudio.procrastinator_proccy.data.User
-import com.kehnestudio.procrastinator_proccy.data.UserDao
+import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistory
+import com.kehnestudio.procrastinator_proccy.data.offline.User
+import com.kehnestudio.procrastinator_proccy.data.offline.UserDao
 import javax.inject.Inject
 
 
@@ -11,20 +10,30 @@ class UserRepository @Inject constructor(
     private val userDao: UserDao
 ) {
 
-
-    fun getUserName(uid: String) = userDao.getUserName(uid)
     fun getSpecificUser(uid: String) = userDao.getSpecificUser(uid)
 
-    suspend fun insert(user: User){
+    fun getUserWithScoreHistory(uid: String) = userDao.getUserWithScoreHistory(uid)
+
+
+    suspend fun insertScore(scoreHistory: ScoreHistory) {
+        userDao.insertScore(scoreHistory)
+    }
+
+    suspend fun updateScore(scoreHistory: ScoreHistory) {
+        userDao.updateScore(scoreHistory)
+    }
+
+    suspend fun insert(user: User) {
         userDao.insert(user)
     }
 
-    suspend fun update(user: User){
+    suspend fun update(user: User) {
         userDao.update(user)
     }
 
-    suspend fun delete(user: User){
-        userDao.delete(user)
+    suspend fun delete() {
+        userDao.deleteAllHistory()
+        userDao.deleteAllUsers()
     }
 
 }

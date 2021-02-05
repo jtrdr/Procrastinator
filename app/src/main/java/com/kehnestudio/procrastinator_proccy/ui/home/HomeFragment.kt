@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.google.firebase.auth.FirebaseAuth
-import com.kehnestudio.procrastinator_proccy.data.User
+import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.databinding.HomeFragmentBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -33,21 +32,31 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
         //binding.root is property on all automatic generated viewbinding classes. Root return whole layout
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         displayNameAndScore()
     }
 
+
     private fun displayNameAndScore(){
-        viewModel.getUserName()?.observe(requireActivity(), Observer {
+
+        viewModel.getUserWithScoreHistory()?.observe(viewLifecycleOwner, Observer {
+            Timber.d("Observing dailyScore%s", it)
+        })
+
+        viewModel.getSpecificUser()?.observe(viewLifecycleOwner, Observer {
+
             Timber.d("Observing username%s", it)
-            binding.textViewDisplayname.text = it
+            binding.textViewDisplayname.text = getString(R.string.home_fragment_displayname, it.name)
+            var score = it.totalScore
+            if (it.totalScore==null){
+                score = 0
+            }
+            binding.textViewTotalScoreDisplay.text = getString(R.string.textview_score_total, score)
         })
     }
-
-
 }
