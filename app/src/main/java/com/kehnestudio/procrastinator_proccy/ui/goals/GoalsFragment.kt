@@ -2,48 +2,78 @@ package com.kehnestudio.procrastinator_proccy.ui.goals
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.google.android.material.slider.Slider
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_START_SERVICE
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_STOP_SERVICE
 import com.kehnestudio.procrastinator_proccy.Constants.EXTRA_TIMER_LENGTH
 import com.kehnestudio.procrastinator_proccy.R
+import com.kehnestudio.procrastinator_proccy.databinding.FragmentGoalsBinding
 import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
 import com.kehnestudio.procrastinator_proccy.services.TimerService
 import com.kehnestudio.procrastinator_proccy.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_goals.*
 import timber.log.Timber
+import java.util.*
 
 @AndroidEntryPoint
-class GoalsFragment : Fragment(R.layout.fragment_goals) {
+class GoalsFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by viewModels()
+    private var _binding: FragmentGoalsBinding? = null
+    /*
+    This property is only valid between onCreateView and onDestroyView -
+    as those views will only be available when visible to user
+    !! will enforce the type of binding property to non-null
+     */
+    private val binding get()= _binding!!
+
+    private val viewModel: GoalsViewModel by viewModels()
 
     private var timeLeftInMillis = 0L
     private var startTime = 300000L
     private var mTimerRunning = false
 
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentGoalsBinding.inflate(inflater, container, false)
+
+        //binding.root is property on all automatic generated viewbinding classes. Root return whole layout
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        button_start.setOnClickListener {
+
+        binding.buttonStart.setOnClickListener {
             startTimer()
         }
 
-        button_reset.setOnClickListener{
+        binding.buttonReset.setOnClickListener{
             stopTimer()
         }
 
-        seekBar_timer.addOnChangeListener { slider, value, fromUser ->
-            startTime = (value.toLong())*60000
-            textView_timeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
+        binding.buttonRefresh.setOnClickListener {
+            updateGoals()
         }
 
-        seekBar_timer.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
+        binding.seekBarTimer.addOnChangeListener { slider, value, fromUser ->
+            startTime = (value.toLong())*60000
+            binding.tvTimeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
+        }
+
+        binding.seekBarTimer.addOnSliderTouchListener(object : Slider.OnSliderTouchListener {
             override fun onStartTrackingTouch(slider: Slider) {
 
             }
@@ -52,7 +82,24 @@ class GoalsFragment : Fragment(R.layout.fragment_goals) {
 
             }
         })
+
         subscribeToObservers()
+    }
+
+    private fun updateGoals(){
+
+        val arrayEnvironment: Array<String> = resources.getStringArray(R.array.questions_environment)
+        val arrayTasks: Array<String> = resources.getStringArray(R.array.questions_tasks)
+        val randomEnvironment: MutableList<String> = arrayEnvironment.toMutableList()
+        val randomTasks: MutableList<String> = arrayTasks.toMutableList()
+
+        randomEnvironment.shuffle()
+        randomTasks.shuffle()
+
+        binding.checkBox.text = randomEnvironment[0]
+        binding.checkBox2.text = randomEnvironment[1]
+        binding.checkBox3.text = randomTasks[0]
+        binding.checkBox4.text = randomTasks[1]
     }
 
     private fun subscribeToObservers() {
@@ -69,16 +116,16 @@ class GoalsFragment : Fragment(R.layout.fragment_goals) {
             val formattedTime: String = (TimerUtility.getFormattedTimerTime(timeLeftInMillis, true))
 
             if(mTimerRunning) {
-                textView_timeLeft.text = formattedTime
+                binding.tvTimeLeft.text = formattedTime
             } else {
-                textView_timeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
+                binding.tvTimeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
             }
         })
     }
 
     private fun startTimer() {
         if(!mTimerRunning) {
-            val timeToPassToService = startTime / 60000
+            val timeToPassToService = startTime
             val intent = Intent(requireContext(), TimerService::class.java)
             intent.putExtra(EXTRA_TIMER_LENGTH, timeToPassToService)
             intent.putExtra(ACTION_START_SERVICE, ACTION_START_SERVICE)
@@ -93,24 +140,25 @@ class GoalsFragment : Fragment(R.layout.fragment_goals) {
             sendCommandToService(ACTION_STOP_SERVICE)
         } else {
             Timber.d("Timer already stopped")
+            viewModel.updateScore(25)
         }
     }
 
     private fun updateButtons(timerRunning: Boolean) {
         this.mTimerRunning = timerRunning
         if(!mTimerRunning) {
-            button_start.visibility = View.VISIBLE
-            button_reset.visibility = View.GONE
-            button_refresh.visibility = View.VISIBLE
-            linearLayoutCheckboxes.visibility = View.VISIBLE
-            seekBar_timer.visibility = View.VISIBLE
-            textView_timeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
+            binding.buttonStart.visibility = View.VISIBLE
+            binding.buttonReset.visibility = View.GONE
+            binding.buttonRefresh.visibility = View.VISIBLE
+            binding.linearLayoutCheckboxes.visibility = View.VISIBLE
+            binding.seekBarTimer.visibility = View.VISIBLE
+            binding.tvTimeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
         } else {
-            button_start.visibility = View.GONE
-            button_reset.visibility = View.VISIBLE
-            button_refresh.visibility = View.GONE
-            linearLayoutCheckboxes.visibility = View.GONE
-            seekBar_timer.visibility = View.GONE
+            binding.buttonStart.visibility = View.GONE
+            binding.buttonReset.visibility = View.VISIBLE
+            binding.buttonRefresh.visibility = View.GONE
+            binding.linearLayoutCheckboxes.visibility = View.GONE
+            binding.seekBarTimer.visibility = View.GONE
         }
     }
 
@@ -119,4 +167,11 @@ class GoalsFragment : Fragment(R.layout.fragment_goals) {
             it.action = action
             requireContext().startService(it)
         }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //clears reference to binding, view is cleaned up in memory
+        _binding = null
+    }
+
 }
