@@ -2,7 +2,6 @@ package com.kehnestudio.procrastinator_proccy.repositories
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
 import timber.log.Timber
 import javax.inject.Inject
 
