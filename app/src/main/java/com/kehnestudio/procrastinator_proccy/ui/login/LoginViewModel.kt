@@ -13,15 +13,10 @@ class LoginViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
 
-    var name = MutableLiveData<String?>()
-    val totalScore = MutableLiveData<Int>()
-
     fun insert(user: User) = viewModelScope.launch {
         userRepository.insert(user)
     }
     fun saveOrUpdateUser(id:String, name: String){
         insert(User(id, name))
-        this.name.value = null
-        totalScore.value = null
     }
 }
