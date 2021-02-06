@@ -41,7 +41,7 @@ class GoalsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentGoalsBinding.inflate(inflater, container, false)
 
         //binding.root is property on all automatic generated viewbinding classes. Root return whole layout

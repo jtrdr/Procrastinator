@@ -1,16 +1,11 @@
 package com.kehnestudio.procrastinator_proccy.ui
 
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
-import com.kehnestudio.procrastinator_proccy.Constants
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_HOME_FRAGMENT
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_LOGIN_FRAGMENT
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 class SplashScreenActivity : AppCompatActivity() {
 

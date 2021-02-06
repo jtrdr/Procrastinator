@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.ui.backdrop
+package com.kehnestudio.procrastinator_proccy.ui.backdrop.myaccount
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,7 +31,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMyaccountBinding.inflate(inflater, container, false)
 
         //binding.root is property on all automatic generated viewbinding classes. Root return whole layout

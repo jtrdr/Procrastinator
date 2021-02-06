@@ -12,7 +12,7 @@ class HomeViewModel @ViewModelInject constructor(
 ) : ViewModel(), Observable {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    var uid = firebaseAuth.currentUser?.uid
+    private var uid = firebaseAuth.currentUser?.uid
 
     fun getSpecificUser() = uid?.let { userRepository.getSpecificUser(it) }
 

@@ -14,13 +14,13 @@ class GoalsViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    var uid = firebaseAuth.currentUser?.uid
+    private var uid = firebaseAuth.currentUser?.uid
 
     fun setTimerIsDoneState(state: Boolean){
         TimerService.mTimerIsDone.value = state
     }
 
-    fun insertScore(scoreHistory: ScoreHistory) = viewModelScope.launch {
+    private fun insertScore(scoreHistory: ScoreHistory) = viewModelScope.launch {
         userRepository.insertScore(scoreHistory)
     }
     fun updateDailyScore(score: Int){

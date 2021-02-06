@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
         //binding.root is property on all automatic generated viewbinding classes. Root return whole layout
 

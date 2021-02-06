@@ -32,7 +32,7 @@ class TimerService : LifecycleService() {
     @Inject
     lateinit var baseNotificationBuilder: NotificationCompat.Builder
 
-    lateinit var currentNotificationBuilder: NotificationCompat.Builder
+    private lateinit var currentNotificationBuilder: NotificationCompat.Builder
 
     companion object {
         var mTimerIsRunning = MutableLiveData<Boolean>(false)
