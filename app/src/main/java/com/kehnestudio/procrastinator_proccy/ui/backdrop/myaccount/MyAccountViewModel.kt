@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.ui.backdrop
+package com.kehnestudio.procrastinator_proccy.ui.backdrop.myaccount
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel

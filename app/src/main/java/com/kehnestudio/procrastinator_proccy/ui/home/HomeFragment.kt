@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
         //binding.root is property on all automatic generated viewbinding classes. Root return whole layout
 
@@ -59,4 +59,11 @@ class HomeFragment : Fragment() {
             binding.textViewTotalScoreDisplay.text = getString(R.string.textview_score_total, score)
         })
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //clears reference to binding, view is cleaned up in memory
+        _binding = null
+    }
+
 }

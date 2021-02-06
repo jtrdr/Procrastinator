@@ -40,7 +40,7 @@
         android:id="@+id/splashScreenActivity"
         android:name="com.kehnestudio.procrastinator_proccy.ui.SplashScreenActivity"
         android:label="activity_splashscreen"
-        tools:layout="@layout/activity_splashscreen"></activity>
+        tools:layout="@layout/activity_splashscreen" />
     <fragment
         android:id="@+id/fragment_login"
         android:name="com.kehnestudio.procrastinator_proccy.ui.login.LoginFragment"
@@ -55,12 +55,12 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_settings"
-        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.SettingsFragment"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@xml/root_preferences" />
     <fragment
         android:id="@+id/fragment_faq"
-        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.FaqFragment"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.faq.FaqFragment"
         android:label="fragment_faq"
         tools:layout="@layout/fragment_faq" />
     <fragment
@@ -83,12 +83,12 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_myaccount"
-        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.MyAccountFragment"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.myaccount.MyAccountFragment"
         android:label="fragment_myaccount"
         tools:layout="@layout/fragment_myaccount" />
     <fragment
         android:id="@+id/fragment_about"
-        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.AboutFragment"
+        android:name="com.kehnestudio.procrastinator_proccy.ui.backdrop.about.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" />
 </navigation>

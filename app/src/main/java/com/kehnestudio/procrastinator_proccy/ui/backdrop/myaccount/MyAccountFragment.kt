@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.ui.backdrop
+package com.kehnestudio.procrastinator_proccy.ui.backdrop.myaccount
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,7 +31,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMyaccountBinding.inflate(inflater, container, false)
 
         //binding.root is property on all automatic generated viewbinding classes. Root return whole layout
@@ -64,4 +64,11 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
             Toast.makeText(requireActivity(), "Logged Out", Toast.LENGTH_LONG).show()
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //clears reference to binding, view is cleaned up in memory
+        _binding = null
+    }
+
 }

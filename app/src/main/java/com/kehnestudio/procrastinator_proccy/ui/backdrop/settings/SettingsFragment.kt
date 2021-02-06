@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.ui.backdrop
+package com.kehnestudio.procrastinator_proccy.ui.backdrop.settings
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat

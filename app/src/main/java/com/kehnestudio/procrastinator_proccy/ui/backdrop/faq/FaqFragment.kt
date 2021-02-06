@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.ui.backdrop
+package com.kehnestudio.procrastinator_proccy.ui.backdrop.faq
 
 import android.os.Bundle
 import android.view.LayoutInflater

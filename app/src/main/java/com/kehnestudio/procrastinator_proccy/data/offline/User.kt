@@ -10,5 +10,5 @@ import kotlinx.android.parcel.Parcelize
 data class User(
     @PrimaryKey(autoGenerate = false) var userId: String,
     val name: String,
-    val totalScore: Int? = null
+    val totalScore: Long? = null
 ) : Parcelable

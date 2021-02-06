@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_GOALS_FRAGMENT
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_HOME_FRAGMENT
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_LOGIN_FRAGMENT
@@ -65,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
 
-        val idHost = nav_host_fragment.findNavController().currentDestination?.getId()
+        val idHost = nav_host_fragment.findNavController().currentDestination?.id
 
         when (idHost) {
             R.id.fragment_home, R.id.fragment_login

@@ -50,7 +50,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideProductsCollectionReference(rootRef: FirebaseFirestore): CollectionReference {
-        return rootRef.collection("users")
+        return rootRef.collection("user_collection")
     }
 
     @Provides
