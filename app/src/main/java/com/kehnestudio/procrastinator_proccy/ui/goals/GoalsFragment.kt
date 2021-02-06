@@ -122,10 +122,14 @@ class GoalsFragment : Fragment() {
             when (it) {
                 //TODO Do something when Timer has finished the normal way
 
-                true -> Timber.d("Timer is done")
+                true -> {
+                    Timber.d("Timer is done")
+                    viewModel.updateDailyScore(25)
+                    viewModel.saveDailyScoreFireStore()
+                }
                 else -> Timber.d("Timer is not done")
             }
-            viewModel.updateDailyScore(25)
+
         })
     }
 

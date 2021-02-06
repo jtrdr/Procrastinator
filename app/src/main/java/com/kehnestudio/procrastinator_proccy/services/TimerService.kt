@@ -25,7 +25,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TimerService : LifecycleService() {
+class TimerService (): LifecycleService() {
 
     private var passedAction: String? = null
 
@@ -127,8 +127,6 @@ class TimerService : LifecycleService() {
         }.start()
     }
 
-
-
     private fun stopService() {
         mTimerIsRunning.postValue(false)
         timer?.cancel()
@@ -144,5 +142,4 @@ class TimerService : LifecycleService() {
         )
         notificationManager.createNotificationChannel(channel)
     }
-
 }
