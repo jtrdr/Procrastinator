@@ -119,4 +119,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //clears reference to binding, view is cleaned up in memory
+        _binding = null
+    }
+
 }

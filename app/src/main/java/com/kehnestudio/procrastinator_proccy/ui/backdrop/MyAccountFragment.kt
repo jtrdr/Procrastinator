@@ -64,4 +64,11 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
             Toast.makeText(requireActivity(), "Logged Out", Toast.LENGTH_LONG).show()
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //clears reference to binding, view is cleaned up in memory
+        _binding = null
+    }
+
 }

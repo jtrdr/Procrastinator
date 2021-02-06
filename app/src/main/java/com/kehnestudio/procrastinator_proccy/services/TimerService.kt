@@ -1,6 +1,5 @@
 package com.kehnestudio.procrastinator_proccy.services
 
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
@@ -8,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
-import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -23,9 +21,7 @@ import com.kehnestudio.procrastinator_proccy.Constants.NOTIFICATION_ID
 import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,6 +37,7 @@ class TimerService : LifecycleService() {
     companion object {
         var mTimerIsRunning = MutableLiveData<Boolean>(false)
         val timeLeftInMillies = MutableLiveData<Long>()
+        var mTimerIsDone = MutableLiveData<Boolean>(false)
     }
 
     override fun onCreate() {
@@ -103,36 +100,9 @@ class TimerService : LifecycleService() {
 
     private fun postInitialValues() {
         mTimerIsRunning.postValue(false)
+        mTimerIsDone.postValue(false)
         timeLeftInMillies.postValue(300000L)
     }
-
-
-
-
-/*
-    private fun startTimer() {
-        mTimerIsRunning.postValue(true)
-        var postedTime: Long
-        val totalSeconds = TimeUnit.MINUTES.toSeconds(timerDuration)
-        val tickSeconds = 0
-        GlobalScope.launch(Dispatchers.Main) {
-            for (second in totalSeconds downTo tickSeconds) {
-                val time = String.format(
-                    "%02d:%02d",
-                    TimeUnit.SECONDS.toMinutes(second),
-                    second - TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(second))
-                )
-                Timber.d(time)
-                postedTime = TimeUnit.SECONDS.toMillis(second)
-                timeLeftInMillies.postValue(postedTime)
-                delay(1000)
-            }
-            Timber.d("Done")
-            stopService()
-        }
-    }
-
- */
 
     private var timerDuration = 1L
     private var timer: CountDownTimer? =null
@@ -140,19 +110,24 @@ class TimerService : LifecycleService() {
     private fun startTimer() {
         Timber.d("Running%s", timerDuration)
         mTimerIsRunning.postValue(true)
+        mTimerIsDone.postValue(false)
 
 
-        timer = object: CountDownTimer(timerDuration, 1000) {
+        timer = object: CountDownTimer(5000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftInMillies.postValue(millisUntilFinished)
                 Timber.d(TimerUtility.getFormattedTimerTime(millisUntilFinished, true))
             }
 
             override fun onFinish() {
+                Timber.d("Timer onFinish")
+                mTimerIsDone.postValue(true)
                 stopService()
             }
         }.start()
     }
+
+
 
     private fun stopService() {
         mTimerIsRunning.postValue(false)

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.google.android.material.slider.Slider
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_START_SERVICE
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_STOP_SERVICE
@@ -17,11 +16,8 @@ import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.databinding.FragmentGoalsBinding
 import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
 import com.kehnestudio.procrastinator_proccy.services.TimerService
-import com.kehnestudio.procrastinator_proccy.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_goals.*
 import timber.log.Timber
-import java.util.*
 
 @AndroidEntryPoint
 class GoalsFragment : Fragment() {
@@ -121,6 +117,16 @@ class GoalsFragment : Fragment() {
                 binding.tvTimeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
             }
         })
+
+        TimerService.mTimerIsDone.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                //TODO Do something when Timer has finished the normal way
+
+                true -> Timber.d("Timer is done")
+                else -> Timber.d("Timer is not done")
+            }
+            viewModel.updateDailyScore(25)
+        })
     }
 
     private fun startTimer() {
@@ -138,9 +144,9 @@ class GoalsFragment : Fragment() {
     private fun stopTimer() {
         if(mTimerRunning) {
             sendCommandToService(ACTION_STOP_SERVICE)
+            viewModel.setTimerIsDoneState(false)
         } else {
             Timber.d("Timer already stopped")
-            viewModel.updateScore(25)
         }
     }
 
