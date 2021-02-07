@@ -1,9 +1,11 @@
 package com.kehnestudio.procrastinator_proccy.ui.home
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -36,16 +38,23 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayNameAndScore()
+        viewModel.saveDataIntoFirestore()
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun displayNameAndScore(){
 
-        viewModel.getUserWithScoreHistory()?.observe(viewLifecycleOwner, Observer {
+        viewModel.getSpecificDailyScore()?.observe(viewLifecycleOwner, Observer {
             Timber.d("Observing dailyScore%s", it)
+            var score = it
+            if (score==null){
+               score = 0
+            }
+            binding.textViewDailyScoreDisplay.text = getString(R.string.textview_score_daily, score)
         })
 
         viewModel.getSpecificUser()?.observe(viewLifecycleOwner, Observer {

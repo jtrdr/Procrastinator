@@ -100,11 +100,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     Timber.d("signInWithCredential:success")
                     val user = mAuth.currentUser
                     if (user != null) {
-                        user.displayName?.let { viewModel.saveOrUpdateUser(user.uid,it) }
-                        user.displayName?.let {
-                            viewModel.saveOrUpdateUserToFireStore(user.uid,
-                                it
-                            )
+                        user.displayName?.let { viewModel.saveOrUpdateUser(user.uid,it)
                         }
                     }
                     nav_host_fragment.findNavController().navigate(R.id.fragment_home)

@@ -16,8 +16,7 @@ import java.time.ZoneId
 import java.util.*
 
 class GoalsViewModel @ViewModelInject constructor(
-    private val userRepository: UserRepository,
-    private val fireStoreRepository: FireStoreRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -33,20 +32,10 @@ class GoalsViewModel @ViewModelInject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateDailyScore(score: Long) {
-        uid?.let { ScoreHistory( LocalDate.now(),it, score) }?.let { insertScore(it) }
+        val localDate = LocalDate.now()
+        val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        uid?.let { ScoreHistory(date, it, score) }?.let { insertScore(it) }
     }
 
-    private fun updateDailyScoreFireStore() {
-        val score = 50L
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val localDate = LocalDate.now()
-            val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-            val today: String = LocalDate.now().toString()
-            uid?.let { fireStoreRepository.saveOrUpdateDailyScore(it, score, date, today) }
-        }
-    }
 
-    fun saveDailyScoreFireStore() {
-        updateDailyScoreFireStore()
-    }
 }

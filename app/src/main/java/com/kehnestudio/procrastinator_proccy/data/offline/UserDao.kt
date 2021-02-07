@@ -2,6 +2,8 @@ package com.kehnestudio.procrastinator_proccy.data.offline
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import java.time.LocalDate
+import java.util.*
 
 @Dao
 interface UserDao {
@@ -25,7 +27,11 @@ interface UserDao {
 
     @Transaction
     @Query("SELECT * FROM user_table where userId =:uid")
-    fun getUserWithScoreHistory(uid: String): LiveData<List<UserWithScoreHistory>>
+    fun getUserWithScoreHistory(uid: String): LiveData<UserWithScoreHistory>
+
+    @Transaction
+    @Query("SELECT score FROM score_table where userId =:uid AND date =:date")
+    fun getSpecificDailyScore(uid:String, date: Date): LiveData<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertScore(scoreHistory: ScoreHistory)
@@ -38,4 +44,19 @@ interface UserDao {
 
     @Query("DELETE FROM score_table")
     suspend fun deleteAllHistory()
+
+    /**
+     * FIRESTORE
+     */
+
+    @Transaction
+    @Query("SELECT * FROM score_table where userId =:uid")
+    fun getDailyScoreHistoryForFireStore(uid: String): ScoreHistory
+
+    @Transaction
+    @Query("SELECT * FROM user_table where userId =:uid")
+    fun getUserForFireStore(uid: String): User
+
+
+
 }

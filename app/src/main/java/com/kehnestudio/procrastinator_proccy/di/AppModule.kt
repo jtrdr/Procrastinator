@@ -55,9 +55,10 @@ object AppModule {
 
     @Provides
     fun provideFireStoreRepository(
+        userRepository: UserRepository,
         rootRef: CollectionReference
     ):FireStoreRepository{
-        return FireStoreRepository(rootRef)
+        return FireStoreRepository(userRepository,rootRef)
     }
 
 

@@ -14,14 +14,6 @@ class LoginViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
 
-    private fun updateFireStore(id: String, name: String){
-        fireStoreRepository.saveOrUpdateUser(id, name)
-    }
-
-    fun saveOrUpdateUserToFireStore(id: String, name: String){
-        updateFireStore(id, name)
-    }
-
     private fun insert(user: User) = viewModelScope.launch {
         userRepository.insert(user)
     }
