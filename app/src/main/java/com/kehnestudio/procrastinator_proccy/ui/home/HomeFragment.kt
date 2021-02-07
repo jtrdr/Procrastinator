@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayNameAndScore()
-        viewModel.saveDataIntoFirestore()
+        viewModel.getUser()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -61,12 +61,16 @@ class HomeFragment : Fragment() {
 
             Timber.d("Observing username%s", it)
             binding.textViewDisplayname.text = getString(R.string.home_fragment_displayname, it.name)
-            var score = it.totalScore
-            if (it.totalScore==null){
-                score = 0
-            }
-            binding.textViewTotalScoreDisplay.text = getString(R.string.textview_score_total, score)
         })
+
+        viewModel.getSumOfDailyScore()?.observe(viewLifecycleOwner, Observer {
+            var totalscore = it
+            if (totalscore == null){
+                totalscore = 0
+            }
+            binding.textViewTotalScoreDisplay.text = getString(R.string.textview_score_total, totalscore)
+        })
+
     }
 
     override fun onDestroyView() {

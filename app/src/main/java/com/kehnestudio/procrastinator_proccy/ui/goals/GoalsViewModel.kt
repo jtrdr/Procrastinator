@@ -1,5 +1,6 @@
 package com.kehnestudio.procrastinator_proccy.ui.goals
 
+import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.hilt.lifecycle.ViewModelInject
@@ -34,8 +35,12 @@ class GoalsViewModel @ViewModelInject constructor(
     fun updateDailyScore(score: Long) {
         val localDate = LocalDate.now()
         val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        uid?.let { ScoreHistory(date, it, score) }?.let { insertScore(it) }
+        val exactDate: Date = getCurrentDateTime()
+        uid?.let { ScoreHistory(exactDate, it, score) }?.let { insertScore(it) }
     }
 
+    private fun getCurrentDateTime(): Date {
+        return Calendar.getInstance().time
+    }
 
 }

@@ -2,6 +2,7 @@ package com.kehnestudio.procrastinator_proccy.data.offline
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.kehnestudio.procrastinator_proccy.data.offline.online.ScoreHistoryFirestore
 import java.time.LocalDate
 import java.util.*
 
@@ -10,6 +11,10 @@ interface UserDao {
 
     @Query("SELECT * FROM user_table WHERE userId = :uid")
     fun getSpecificUser(uid: String): LiveData<User>
+
+    @Transaction
+    @Query("SELECT SUM(score) FROM score_table where userId =:uid")
+    fun getSumOfDailyScore(uid: String): LiveData<Long>
 
     /** Examples
     @Query("SELECT name FROM user_table WHERE id = :uid")
@@ -24,10 +29,6 @@ interface UserDao {
 
     @Update
     suspend fun update(user: User)
-
-    @Transaction
-    @Query("SELECT * FROM user_table where userId =:uid")
-    fun getUserWithScoreHistory(uid: String): LiveData<UserWithScoreHistory>
 
     @Transaction
     @Query("SELECT score FROM score_table where userId =:uid AND date =:date")
@@ -50,13 +51,10 @@ interface UserDao {
      */
 
     @Transaction
-    @Query("SELECT * FROM score_table where userId =:uid")
-    fun getDailyScoreHistoryForFireStore(uid: String): ScoreHistory
+    @Query("SELECT date, score FROM score_table where userId =:uid")
+    fun getDailyScoreHistory(uid: String): List<ScoreHistoryFirestore>
 
-    @Transaction
-    @Query("SELECT * FROM user_table where userId =:uid")
-    fun getUserForFireStore(uid: String): User
-
-
+    @Query("SELECT * FROM user_table WHERE userId = :uid")
+    fun getSpecificUserFireStore(uid: String): User
 
 }

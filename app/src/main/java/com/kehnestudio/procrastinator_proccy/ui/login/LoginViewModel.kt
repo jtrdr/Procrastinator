@@ -9,8 +9,7 @@ import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
 import kotlinx.coroutines.launch
 
 class LoginViewModel @ViewModelInject constructor(
-    private val userRepository: UserRepository,
-    private val fireStoreRepository: FireStoreRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
 

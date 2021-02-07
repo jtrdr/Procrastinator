@@ -29,15 +29,17 @@ class HomeViewModel @ViewModelInject constructor(
         val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
         userRepository.getSpecificDailyScore(it, date) }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun saveDataIntoFirestore(){
-        fireStoreRepository.saveOrUpdateUser()
-    }
+    fun getSumOfDailyScore() =
+        uid?.let { userRepository.getSumOfDailyScore(it) }
 
     override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
     }
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
+    }
+
+    fun getUser(){
+        uid?.let { fireStoreRepository.getUser(it) }
     }
 
 }

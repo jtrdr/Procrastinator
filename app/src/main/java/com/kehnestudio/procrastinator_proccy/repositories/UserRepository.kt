@@ -14,14 +14,13 @@ class UserRepository @Inject constructor(
 
     fun getSpecificUser(uid: String) = userDao.getSpecificUser(uid)
 
-    fun getUserWithScoreHistory(uid: String) = userDao.getUserWithScoreHistory(uid)
-
     fun getSpecificDailyScore(uid:String, date: Date) = userDao.getSpecificDailyScore(uid, date)
 
-    fun getUserWithScoreHistoryFirestore(uid: String) = userDao.getUserForFireStore(uid)
+    fun getUserWithScoreHistoryFirestore(uid: String) = userDao.getSpecificUserFireStore(uid)
 
-    fun getDailyScoreHistoryForFireStore(uid: String) = userDao.getDailyScoreHistoryForFireStore(uid)
+    fun getDailyScoreHistoryForFireStore(uid: String) = userDao.getDailyScoreHistory(uid)
 
+    fun getSumOfDailyScore(uid: String) = userDao.getSumOfDailyScore(uid)
 
     suspend fun insertScore(scoreHistory: ScoreHistory) {
         userDao.insertScore(scoreHistory)
