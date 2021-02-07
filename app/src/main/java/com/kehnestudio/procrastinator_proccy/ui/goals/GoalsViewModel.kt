@@ -1,5 +1,6 @@
 package com.kehnestudio.procrastinator_proccy.ui.goals
 
+import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.hilt.lifecycle.ViewModelInject
@@ -17,11 +18,10 @@ import java.util.*
 
 class GoalsViewModel @ViewModelInject constructor(
     private val userRepository: UserRepository,
-    private val fireStoreRepository: FireStoreRepository
+    private val mAuth: FirebaseAuth
 ) : ViewModel() {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var uid = firebaseAuth.currentUser?.uid
+    private var uid = mAuth.currentUser?.uid
 
     fun setTimerIsDoneState(state: Boolean) {
         TimerService.mTimerIsDone.value = state
@@ -33,20 +33,14 @@ class GoalsViewModel @ViewModelInject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateDailyScore(score: Long) {
-        uid?.let { ScoreHistory( LocalDate.now(),it, score) }?.let { insertScore(it) }
+        val localDate = LocalDate.now()
+        val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val exactDate: Date = getCurrentDateTime()
+        uid?.let { ScoreHistory(exactDate, it, score) }?.let { insertScore(it) }
     }
 
-    private fun updateDailyScoreFireStore() {
-        val score = 50L
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val localDate = LocalDate.now()
-            val date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-            val today: String = LocalDate.now().toString()
-            uid?.let { fireStoreRepository.saveOrUpdateDailyScore(it, score, date, today) }
-        }
+    private fun getCurrentDateTime(): Date {
+        return Calendar.getInstance().time
     }
 
-    fun saveDailyScoreFireStore() {
-        updateDailyScoreFireStore()
-    }
 }

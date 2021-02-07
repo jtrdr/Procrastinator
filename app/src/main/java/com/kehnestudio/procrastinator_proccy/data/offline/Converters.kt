@@ -4,38 +4,20 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
 import java.time.LocalDate
+import java.util.*
 
 class Converters {
 
-    /*
-    @RequiresApi(Build.VERSION_CODES.O)
+
     @TypeConverter
-    fun fromLocalDate(date: LocalDate?): Long? {
-        return date?.toEpochDay()
+    fun fromDate(date: Date?): Long? {
+        return date?.time
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
-    fun toLocalDate(date: Long?) : LocalDate? {
-        return toLocalDate(date)
-    }
-
-     */
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @TypeConverter
-    fun toLongDate(dateLong: Long?): LocalDate? {
-        return if (dateLong == null) {
-            null
-        } else {
-            LocalDate.ofEpochDay(dateLong)
+    fun toDate(millisSinceEpoch: Long?): Date? {
+        return millisSinceEpoch?.let {
+            Date(it)
         }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @TypeConverter
-    fun toDateLong(date: LocalDate?): Long? {
-        return date?.toEpochDay()
-    }
-
 }

@@ -1,10 +1,12 @@
 package com.kehnestudio.procrastinator_proccy.ui.goals
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -23,11 +25,6 @@ import timber.log.Timber
 class GoalsFragment : Fragment() {
 
     private var _binding: FragmentGoalsBinding? = null
-    /*
-    This property is only valid between onCreateView and onDestroyView -
-    as those views will only be available when visible to user
-    !! will enforce the type of binding property to non-null
-     */
     private val binding get()= _binding!!
 
     private val viewModel: GoalsViewModel by viewModels()
@@ -48,6 +45,7 @@ class GoalsFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -98,13 +96,12 @@ class GoalsFragment : Fragment() {
         binding.checkBox4.text = randomTasks[1]
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun subscribeToObservers() {
 
         TimerService.mTimerIsRunning.observe(viewLifecycleOwner, Observer {
-            updateButtons(it)
-            if(!it){
-                stopTimer()
-            }
+            mTimerRunning = it
+            updateButtons()
         })
 
         TimerService.timeLeftInMillies.observe(viewLifecycleOwner, Observer {
@@ -123,13 +120,12 @@ class GoalsFragment : Fragment() {
                 //TODO Do something when Timer has finished the normal way
 
                 true -> {
-                    Timber.d("Timer is done")
+                    Timber.d("Observing mTimerIsDone: true")
+                    viewModel.setTimerIsDoneState(false)
                     viewModel.updateDailyScore(25)
-                    viewModel.saveDailyScoreFireStore()
                 }
-                else -> Timber.d("Timer is not done")
+                else -> Timber.d("Observing mTimerIsDone: false")
             }
-
         })
     }
 
@@ -141,7 +137,7 @@ class GoalsFragment : Fragment() {
             intent.putExtra(ACTION_START_SERVICE, ACTION_START_SERVICE)
             requireActivity().startService(intent)
         } else {
-            Timber.d("Timer already running")
+            Timber.d("startTimer(): Timer already running")
         }
     }
 
@@ -150,12 +146,12 @@ class GoalsFragment : Fragment() {
             sendCommandToService(ACTION_STOP_SERVICE)
             viewModel.setTimerIsDoneState(false)
         } else {
-            Timber.d("Timer already stopped")
+            Timber.d("stopTimer(): Timer already stopped")
         }
     }
 
-    private fun updateButtons(timerRunning: Boolean) {
-        this.mTimerRunning = timerRunning
+    private fun updateButtons() {
+
         if(!mTimerRunning) {
             binding.buttonStart.visibility = View.VISIBLE
             binding.buttonReset.visibility = View.GONE

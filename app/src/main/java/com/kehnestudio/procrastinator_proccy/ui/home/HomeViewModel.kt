@@ -1,10 +1,16 @@
 package com.kehnestudio.procrastinator_proccy.ui.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
 
 
 class HomeViewModel @ViewModelInject constructor(
@@ -16,12 +22,18 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun getSpecificUser() = uid?.let { userRepository.getSpecificUser(it) }
 
-    fun getUserWithScoreHistory() = uid?.let { userRepository.getUserWithScoreHistory(it) }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getSpecificDailyScore() = uid?.let {
+        val localDate = LocalDate.now()
+        val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        userRepository.getSpecificDailyScore(it, date) }
+
+    fun getSumOfDailyScore() =
+        uid?.let { userRepository.getSumOfDailyScore(it) }
 
     override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
     }
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
     }
-
 }
