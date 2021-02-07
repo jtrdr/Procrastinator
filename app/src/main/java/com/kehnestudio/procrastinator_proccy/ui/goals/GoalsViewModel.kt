@@ -17,11 +17,11 @@ import java.time.ZoneId
 import java.util.*
 
 class GoalsViewModel @ViewModelInject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val mAuth: FirebaseAuth
 ) : ViewModel() {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var uid = firebaseAuth.currentUser?.uid
+    private var uid = mAuth.currentUser?.uid
 
     fun setTimerIsDoneState(state: Boolean) {
         TimerService.mTimerIsDone.value = state

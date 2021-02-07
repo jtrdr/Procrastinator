@@ -14,8 +14,7 @@ import java.util.*
 
 
 class HomeViewModel @ViewModelInject constructor(
-    private val userRepository: UserRepository,
-    private val fireStoreRepository: FireStoreRepository
+    private val userRepository: UserRepository
 ) : ViewModel(), Observable {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -37,9 +36,4 @@ class HomeViewModel @ViewModelInject constructor(
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
     }
-
-    fun getUser(){
-        uid?.let { fireStoreRepository.getUser(it) }
-    }
-
 }

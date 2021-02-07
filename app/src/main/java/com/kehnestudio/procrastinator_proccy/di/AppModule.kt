@@ -1,7 +1,10 @@
 package com.kehnestudio.procrastinator_proccy.di
 
 import android.app.Application
+import androidx.annotation.Nullable
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kehnestudio.procrastinator_proccy.data.offline.UserDao
@@ -53,14 +56,21 @@ object AppModule {
         return rootRef.collection("user_collection")
     }
 
+    @Nullable
     @Provides
     fun provideFireStoreRepository(
         userRepository: UserRepository,
-        rootRef: CollectionReference
+        rootRef: CollectionReference,
+        firebaseAuth: FirebaseAuth
     ):FireStoreRepository{
-        return FireStoreRepository(userRepository,rootRef)
+        return FireStoreRepository(userRepository,rootRef, firebaseAuth)
     }
 
+    @Singleton
+    @Provides
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return FirebaseAuth.getInstance()
+    }
 
     //Coroutine lives as long as application because it is a Singleton and this Module is Installed Application Component
     @ApplicationScope

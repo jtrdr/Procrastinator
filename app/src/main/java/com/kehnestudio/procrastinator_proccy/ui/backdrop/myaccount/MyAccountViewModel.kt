@@ -1,6 +1,7 @@
 package com.kehnestudio.procrastinator_proccy.ui.backdrop.myaccount
 
 import android.os.Build
+import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class MyAccountViewModel @ViewModelInject constructor(
     private val userRepository: UserRepository,
+    @Nullable
     private val fireStoreRepository: FireStoreRepository
 ) : ViewModel() {
 

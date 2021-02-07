@@ -1,9 +1,11 @@
 package com.kehnestudio.procrastinator_proccy.repositories
 
 import android.os.Build
+import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.SetOptions
 import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistory
@@ -20,11 +22,12 @@ import javax.inject.Inject
 
 class FireStoreRepository @Inject constructor(
     private val userRepository: UserRepository,
-    private val userRef: CollectionReference
+    private val userRef: CollectionReference,
+    private val mAuth : FirebaseAuth
 ) {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var uid = firebaseAuth.currentUser?.uid
+
+    private var uid = mAuth.currentUser?.uid
 
 
     @RequiresApi(Build.VERSION_CODES.O)
