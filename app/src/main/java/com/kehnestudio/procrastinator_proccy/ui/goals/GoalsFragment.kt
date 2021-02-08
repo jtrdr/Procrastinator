@@ -120,11 +120,10 @@ class GoalsFragment : Fragment() {
                 //TODO Do something when Timer has finished the normal way
 
                 true -> {
-                    Timber.d("Observing mTimerIsDone: true")
                     viewModel.setTimerIsDoneState(false)
                     viewModel.updateDailyScore(25)
                 }
-                else -> Timber.d("Observing mTimerIsDone: false")
+                else -> return@Observer
             }
         })
     }
@@ -137,7 +136,7 @@ class GoalsFragment : Fragment() {
             intent.putExtra(ACTION_START_SERVICE, ACTION_START_SERVICE)
             requireActivity().startService(intent)
         } else {
-            Timber.d("startTimer(): Timer already running")
+            return
         }
     }
 
@@ -146,7 +145,7 @@ class GoalsFragment : Fragment() {
             sendCommandToService(ACTION_STOP_SERVICE)
             viewModel.setTimerIsDoneState(false)
         } else {
-            Timber.d("stopTimer(): Timer already stopped")
+            return
         }
     }
 

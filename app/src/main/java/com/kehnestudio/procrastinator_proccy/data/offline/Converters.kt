@@ -1,9 +1,6 @@
 package com.kehnestudio.procrastinator_proccy.data.offline
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
-import java.time.LocalDate
 import java.util.*
 
 class Converters {

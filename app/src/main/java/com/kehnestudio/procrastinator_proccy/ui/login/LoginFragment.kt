@@ -35,7 +35,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var googleSignInClient: GoogleSignInClient
 
 
-    private val viewModel by viewModels<LoginViewModel>()
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

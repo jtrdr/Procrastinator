@@ -8,7 +8,7 @@
     tools:context=".ui.backdrop.about.AboutFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="About Proccy"

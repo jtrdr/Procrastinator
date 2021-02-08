@@ -44,27 +44,23 @@ class TimerService (): LifecycleService() {
         super.onCreate()
         currentNotificationBuilder = baseNotificationBuilder
         postInitialValues()
-
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        if (intent != null && intent.extras != null) {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        if (intent.extras != null) {
             passedAction = intent.getStringExtra(ACTION_START_SERVICE)
             timerDuration = intent.getLongExtra(EXTRA_TIMER_LENGTH, 0)
             when (passedAction) {
                 ACTION_START_SERVICE -> {
                     startForeGroundService()
-                    Timber.d("onStartCommand: Service started")
                 }
                 else -> Timber.d("onStartCommand: Service did nothing")
             }
         } else {
-            intent?.let {
+            intent.let {
                 when (it.action) {
                     ACTION_STOP_SERVICE -> {
                         stopService()
-                        Timber.d("onStartCommand: Service stopped")
                     }
                 }
             }
@@ -108,7 +104,6 @@ class TimerService (): LifecycleService() {
     private var timer: CountDownTimer? =null
 
     private fun startTimer() {
-        Timber.d("Running%s", timerDuration)
         mTimerIsRunning.postValue(true)
         mTimerIsDone.postValue(false)
 
@@ -116,11 +111,9 @@ class TimerService (): LifecycleService() {
         timer = object: CountDownTimer(5000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftInMillies.postValue(millisUntilFinished)
-                Timber.d(TimerUtility.getFormattedTimerTime(millisUntilFinished, true))
             }
 
             override fun onFinish() {
-                Timber.d("Timer onFinish")
                 mTimerIsDone.postValue(true)
                 stopService()
             }

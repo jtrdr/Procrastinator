@@ -44,7 +44,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mAuth = FirebaseAuth.getInstance()
-        viewModel.saveDataIntoFirestore()
+        //viewModel.saveDataIntoFirestore()
 
         binding.btnLogout.setOnClickListener {
             logout()

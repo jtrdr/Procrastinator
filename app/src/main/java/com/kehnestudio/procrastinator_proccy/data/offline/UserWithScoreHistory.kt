@@ -2,7 +2,6 @@ package com.kehnestudio.procrastinator_proccy.data.offline
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import androidx.room.TypeConverters
 
 
 data class UserWithScoreHistory(

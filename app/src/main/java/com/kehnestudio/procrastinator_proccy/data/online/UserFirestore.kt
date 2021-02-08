@@ -1,6 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.data.offline.online
-
-import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistory
+package com.kehnestudio.procrastinator_proccy.data.online
 
 data class UserFirestore(
     var userId: String? = null,

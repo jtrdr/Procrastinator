@@ -3,17 +3,17 @@ package com.kehnestudio.procrastinator_proccy.ui.home
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
+import javax.inject.Inject
 
-
-class HomeViewModel @ViewModelInject constructor(
+@HiltViewModel
+class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel(), Observable {
 
