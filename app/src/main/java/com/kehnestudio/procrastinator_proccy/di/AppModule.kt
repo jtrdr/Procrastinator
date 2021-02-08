@@ -56,6 +56,7 @@ object AppModule {
     }
 
     @Nullable
+    @Singleton
     @Provides
     fun provideFireStoreRepository(
         userRepository: UserRepository,

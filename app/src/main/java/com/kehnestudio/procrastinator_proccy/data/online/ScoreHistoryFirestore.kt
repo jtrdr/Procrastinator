@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.data.offline.online
+package com.kehnestudio.procrastinator_proccy.data.online
 
 import java.util.*
 

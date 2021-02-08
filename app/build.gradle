@@ -92,9 +92,12 @@ dependencies {
 
     // Dagger Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
-    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltAndroidXVersion"
+    implementation 'androidx.hilt:hilt-work:1.0.0-alpha03'
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
     kapt "androidx.hilt:hilt-compiler:$hiltAndroidXVersion"
+
+
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"

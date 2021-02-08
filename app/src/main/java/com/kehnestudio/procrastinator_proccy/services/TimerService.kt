@@ -57,7 +57,7 @@ class TimerService (): LifecycleService() {
                 else -> Timber.d("onStartCommand: Service did nothing")
             }
         } else {
-            intent?.let {
+            intent.let {
                 when (it.action) {
                     ACTION_STOP_SERVICE -> {
                         stopService()

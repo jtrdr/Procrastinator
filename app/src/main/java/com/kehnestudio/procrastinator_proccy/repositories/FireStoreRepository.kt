@@ -7,8 +7,8 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.SetOptions
 import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistory
 import com.kehnestudio.procrastinator_proccy.data.offline.User
-import com.kehnestudio.procrastinator_proccy.data.offline.online.ScoreHistoryFirestore
-import com.kehnestudio.procrastinator_proccy.data.offline.online.UserFirestore
+import com.kehnestudio.procrastinator_proccy.data.online.ScoreHistoryFirestore
+import com.kehnestudio.procrastinator_proccy.data.online.UserFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
