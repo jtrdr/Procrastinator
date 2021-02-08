@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     override fun onBackPressed() {
 
         val idHost = nav_host_fragment.findNavController().currentDestination?.id

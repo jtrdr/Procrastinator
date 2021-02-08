@@ -3,7 +3,6 @@ package com.kehnestudio.procrastinator_proccy.repositories
 import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistory
 import com.kehnestudio.procrastinator_proccy.data.offline.User
 import com.kehnestudio.procrastinator_proccy.data.offline.UserDao
-import java.time.LocalDate
 import java.util.*
 import javax.inject.Inject
 

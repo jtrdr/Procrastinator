@@ -1,9 +1,11 @@
 package com.kehnestudio.procrastinator_proccy.ui.progress
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ProgressViewModel @ViewModelInject constructor(
+@HiltViewModel
+class ProgressViewModel @Inject constructor(
 ) : ViewModel() {
 
 }

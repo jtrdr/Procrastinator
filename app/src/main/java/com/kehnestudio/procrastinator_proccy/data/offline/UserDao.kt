@@ -3,7 +3,6 @@ package com.kehnestudio.procrastinator_proccy.data.offline
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.kehnestudio.procrastinator_proccy.data.offline.online.ScoreHistoryFirestore
-import java.time.LocalDate
 import java.util.*
 
 @Dao

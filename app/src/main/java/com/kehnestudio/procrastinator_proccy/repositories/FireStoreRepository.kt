@@ -1,16 +1,12 @@
 package com.kehnestudio.procrastinator_proccy.repositories
 
 import android.os.Build
-import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.SetOptions
 import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistory
 import com.kehnestudio.procrastinator_proccy.data.offline.User
-import com.kehnestudio.procrastinator_proccy.data.offline.UserWithScoreHistory
 import com.kehnestudio.procrastinator_proccy.data.offline.online.ScoreHistoryFirestore
 import com.kehnestudio.procrastinator_proccy.data.offline.online.UserFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +15,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
+
 
 class FireStoreRepository @Inject constructor(
     private val userRepository: UserRepository,

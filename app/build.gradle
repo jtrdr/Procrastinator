@@ -112,9 +112,10 @@ dependencies {
 
     //Material Progress Bar
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
-
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion"
 
+    //Work Manager
+    implementation "androidx.work:work-runtime-ktx:$workVersion"
 
 }
 

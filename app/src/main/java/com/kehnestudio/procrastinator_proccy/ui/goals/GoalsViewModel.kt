@@ -1,22 +1,22 @@
 package com.kehnestudio.procrastinator_proccy.ui.goals
 
-import android.icu.text.SimpleDateFormat
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistory
-import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
 import com.kehnestudio.procrastinator_proccy.services.TimerService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
+import javax.inject.Inject
 
-class GoalsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class GoalsViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val mAuth: FirebaseAuth
 ) : ViewModel() {
@@ -35,12 +35,6 @@ class GoalsViewModel @ViewModelInject constructor(
     fun updateDailyScore(score: Long) {
         val localDate = LocalDate.now()
         val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        val exactDate: Date = getCurrentDateTime()
-        uid?.let { ScoreHistory(exactDate, it, score) }?.let { insertScore(it) }
+        uid?.let { ScoreHistory(date, it, score) }?.let { insertScore(it) }
     }
-
-    private fun getCurrentDateTime(): Date {
-        return Calendar.getInstance().time
-    }
-
 }

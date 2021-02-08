@@ -46,9 +46,8 @@ class TimerService (): LifecycleService() {
         postInitialValues()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        if (intent != null && intent.extras != null) {
+    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        if (intent.extras != null) {
             passedAction = intent.getStringExtra(ACTION_START_SERVICE)
             timerDuration = intent.getLongExtra(EXTRA_TIMER_LENGTH, 0)
             when (passedAction) {
