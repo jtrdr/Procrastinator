@@ -14,15 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyAccountViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    @Nullable
-    private val fireStoreRepository: FireStoreRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun saveDataIntoFirestore(){
-        fireStoreRepository.saveOrUpdateUser()
-    }
 
     private fun delete() = CoroutineScope(Dispatchers.IO).launch {
         userRepository.delete()

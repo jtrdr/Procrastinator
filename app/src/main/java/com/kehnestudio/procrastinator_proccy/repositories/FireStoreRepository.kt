@@ -20,7 +20,7 @@ import javax.inject.Inject
 class FireStoreRepository @Inject constructor(
     private val userRepository: UserRepository,
     private val userRef: CollectionReference,
-    private val mAuth : FirebaseAuth
+    private val mAuth: FirebaseAuth
 ) {
 
 
@@ -28,9 +28,7 @@ class FireStoreRepository @Inject constructor(
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun saveOrUpdateUser() {
-
-        val today: String = LocalDate.now().toString()
+    fun updateUserInFireStore() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val scoreHistory: List<ScoreHistoryFirestore>? = uid?.let {
@@ -67,71 +65,34 @@ class FireStoreRepository @Inject constructor(
     }
 
 
-    fun getUser(id: String) {
+    fun loadUserFromFireStore(id: String) {
         userRef.document(id).get()
             .addOnSuccessListener { document ->
-                if (document != null) {
-                    Timber.d("Successfully retrieved User from Firestore:%s", document.data)
+                if (document.data != null) {
+                    Timber.d(
+                        "Successfully retrieved User from with guid $id, content: %s",
+                        document.data
+                    )
                     val userFirestore: UserFirestore? = document.toObject(UserFirestore::class.java)
 
-
-                        CoroutineScope(Dispatchers.IO).launch {
-                            userFirestore?.score_history?.forEach { e ->
-                                Timber.d("Score History: $e")
-                                var scoreHistory = e.date?.let {
-                                    ScoreHistory(
-                                        it, id, e.score
-                                    )
-                                }
-                                if (scoreHistory != null) {
-                                    userRepository.insertScore(scoreHistory)
-                                }
-                                Timber.d("Score History: $scoreHistory")
-                        }
-                    }
-
-                    /**
-                    val user: User? = userFirestore?.userId?.let {
-                        userFirestore.name?.let { it1 ->
-                            User(
-                                it,
-                                it1
-                            )
-                        }
-                    }
-
-
-                    if (userFirestore != null) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            if (user != null) {
-                                userRepository.insert(user)
+                    //Insert into local Room database
+                    CoroutineScope(Dispatchers.IO).launch {
+                        userFirestore?.score_history?.forEach { e ->
+                            var scoreHistory = e.date?.let {
+                                ScoreHistory(
+                                    it, id, e.score
+                                )
+                            }
+                            if (scoreHistory != null) {
+                                userRepository.insertScore(scoreHistory)
                             }
                         }
                     }
-                     */
                 } else {
-                    Timber.d("No such document")
+                    Timber.d("No such document with guid: $id")
                 }
-            }.addOnFailureListener{ exception ->
-            Timber.d("FirestoreRepository getUser failed with %s", exception.toString())
-        }
-    }
-
-    fun getDailyScoreHistory(id: String) {
-        userRef.document(id).collection("score_history_collection").get()
-            .addOnSuccessListener { collection ->
-                if (collection != null) {
-                    Timber.d("Successfully retrieved User from Firestore")
-                    Timber.d("collection: %s", collection)
-                } else {
-                    Timber.d("No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Timber.d(" FirestoreRepository getUser failed with %s", exception.toString())
+            }.addOnFailureListener { exception ->
+                Timber.d("FirestoreRepository getUser failed with %s", exception.toString())
             }
     }
-
-
-
 }

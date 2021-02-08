@@ -19,11 +19,6 @@ import timber.log.Timber
 class HomeFragment : Fragment() {
 
     private var _binding: HomeFragmentBinding? = null
-    /*
-    This property is only valid between onCreateView and onDestroyView -
-    as those views will only be available when visible to user
-    !! will enforce the type of binding property to non-null
-     */
     private val binding get()= _binding!!
     private val viewModel: HomeViewModel by viewModels()
 
@@ -33,8 +28,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = HomeFragmentBinding.inflate(inflater, container, false)
-        //binding.root is property on all automatic generated viewbinding classes. Root return whole layout
-
         return binding.root
     }
 
@@ -48,7 +41,6 @@ class HomeFragment : Fragment() {
     private fun displayNameAndScore(){
 
         viewModel.getSpecificDailyScore()?.observe(viewLifecycleOwner, Observer {
-            Timber.d("Observing dailyScore%s", it)
             var score = it
             if (score==null){
                score = 0
@@ -57,8 +49,6 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.getSpecificUser()?.observe(viewLifecycleOwner, Observer {
-
-            Timber.d("Observing username%s", it)
             binding.textViewDisplayname.text = getString(R.string.home_fragment_displayname, it.name)
         })
 
@@ -74,7 +64,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        //clears reference to binding, view is cleaned up in memory
         _binding = null
     }
 

@@ -1,4 +1,4 @@
-package com.kehnestudio.procrastinator_proccy.data.online
+package com.kehnestudio.procrastinator_proccy.utilities
 
 import android.content.Context
 import android.os.Build
@@ -9,7 +9,6 @@ import androidx.work.*
 import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,14 +28,15 @@ class UploadWorker @AssistedInject constructor(
         return try {
 
             val time = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-            val currentDate = time.format(Date())
+            val currentTime = time.format(Date())
 
-            fireStoreRepository.saveOrUpdateUser()
+            val outputData: Data = Data.Builder()
+                .putString(KEY_WORKER, currentTime)
+                .build()
 
-            Timber.d("Uploading $currentDate")
+            fireStoreRepository.updateUserInFireStore()
 
-            Result.success()
-
+            Result.success(outputData)
         } catch (e: Exception) {
             Result.failure()
         }

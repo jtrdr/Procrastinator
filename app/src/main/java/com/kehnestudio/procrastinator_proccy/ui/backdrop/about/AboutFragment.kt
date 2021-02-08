@@ -3,13 +3,11 @@ package com.kehnestudio.procrastinator_proccy.ui.backdrop.about
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.work.*
 import com.kehnestudio.procrastinator_proccy.R
-import com.kehnestudio.procrastinator_proccy.data.online.UploadWorker
-import com.kehnestudio.procrastinator_proccy.data.online.UploadWorker.Companion.KEY_WORKER
+import com.kehnestudio.procrastinator_proccy.utilities.UploadWorker
 import kotlinx.android.synthetic.main.fragment_about.*
 import java.util.concurrent.TimeUnit
 
@@ -28,16 +26,28 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
     }
 
     private fun sendPeriodicWorkRequest() {
-        val periodicWorkRequest = PeriodicWorkRequest
-            .Builder(UploadWorker::class.java, 15, TimeUnit.MINUTES)
+
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val workManager: Operation = WorkManager
+        val oneTimeWorkRequest = OneTimeWorkRequest
+            .Builder(UploadWorker::class.java)
+            .setConstraints(constraints)
+            .build()
+
+        val workManager: WorkManager = WorkManager
             .getInstance(requireActivity())
-            .enqueueUniquePeriodicWork(
-                "Data Sync",
-                ExistingPeriodicWorkPolicy.KEEP,
-                periodicWorkRequest
-            )
+
+        workManager.enqueue(oneTimeWorkRequest)
+
+        workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.id)
+            .observe(viewLifecycleOwner, Observer {
+                if(it.state.isFinished){
+                    val data = it.outputData
+                    val dateAndTime = data.getString(UploadWorker.KEY_WORKER)
+                    textView_about.text = dateAndTime
+                }
+            })
     }
 }

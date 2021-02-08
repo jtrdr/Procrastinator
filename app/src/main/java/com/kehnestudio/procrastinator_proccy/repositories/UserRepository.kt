@@ -25,16 +25,8 @@ class UserRepository @Inject constructor(
         userDao.insertScore(scoreHistory)
     }
 
-    suspend fun updateScore(scoreHistory: ScoreHistory) {
-        userDao.updateScore(scoreHistory)
-    }
-
     suspend fun insert(user: User) {
         userDao.insert(user)
-    }
-
-    suspend fun update(user: User) {
-        userDao.update(user)
     }
 
     suspend fun delete() {

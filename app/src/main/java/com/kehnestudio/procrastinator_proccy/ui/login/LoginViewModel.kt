@@ -15,7 +15,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
     @Nullable private val fireStoreRepository: FireStoreRepository,
-    private val mAuth: FirebaseAuth
+    mAuth: FirebaseAuth
 ) : ViewModel() {
 
 
@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun getUser(){
-        uid?.let { fireStoreRepository.getUser(it) }
+        uid?.let { fireStoreRepository.loadUserFromFireStore(it) }
     }
 
     fun loadDataFromFireStore(){
