@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -34,6 +35,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
+    private var loggedOutUserId: String? = null
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -49,6 +51,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getUserId().observe(viewLifecycleOwner, Observer {
+            loggedOutUserId = it
+        })
 
         binding.buttonSignIn.setOnClickListener {
             signIn()
@@ -97,15 +103,28 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Timber.d("signInWithCredential:success")
+                    Timber.d("firebaseAuthWithGoogle: signInWithCredential:success")
                     val user = mAuth.currentUser
+                    val uid = user?.uid
                     if (user != null) {
-                        user.displayName?.let { viewModel.saveOrUpdateUser(user.uid,it)
+                        if (user.uid != loggedOutUserId) {
+                            if (loggedOutUserId != null){
+                                viewModel.deleteAll(loggedOutUserId!!)
+                                Timber.d("firebaseAuthWithGoogle: Deleting all data with Id: $loggedOutUserId")
+                            }
+                            user.displayName?.let {
+                                viewModel.saveOrUpdateUser(user.uid, it)
+                                Timber.d("firebaseAuthWithGoogle: Saving user in Room with ${user.uid}")
+                            }
+                        } else {
+                            Timber.d("firebaseAuthWithGoogle: Logging in as previous user")
                         }
                     }
-                    viewModel.loadDataFromFireStore()
-                    nav_host_fragment.findNavController().navigate(R.id.fragment_home)
-
+                    Timber.d("firebaseAuthWithGoogle: Loading data from fireStore")
+                    if (uid!=null){
+                        viewModel.loadDataFromFireStore(uid)
+                        nav_host_fragment.findNavController().navigate(R.id.fragment_home)
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     Timber.tag(TAG).w(task.exception, "signInWithCredential:failure")

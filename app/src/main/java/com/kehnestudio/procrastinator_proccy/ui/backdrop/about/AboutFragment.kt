@@ -38,30 +38,8 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.textViewAbout.setOnClickListener {
-            sendPeriodicWorkRequest()
+            viewModel.sendPeriodicWorkRequest(requireContext())
         }
-    }
-
-
-
-    private fun sendPeriodicWorkRequest() {
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val periodicWorkRequest = PeriodicWorkRequest
-            .Builder(UploadWorker::class.java, 1,TimeUnit.DAYS)
-            .setConstraints(constraints)
-            .build()
-
-        val workManager: WorkManager = WorkManager
-            .getInstance(requireActivity())
-
-        workManager.enqueueUniquePeriodicWork(
-            "com.kehnestudio.procrastinator_proccy.ui.backdrop.about",
-            ExistingPeriodicWorkPolicy.KEEP,
-            periodicWorkRequest)
     }
 
     override fun onDestroyView() {
