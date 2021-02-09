@@ -5,16 +5,11 @@ import android.os.Build
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
-import com.kehnestudio.procrastinator_proccy.repositories.DataStoreRepository
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 @HiltWorker
 class UploadWorker @AssistedInject constructor(

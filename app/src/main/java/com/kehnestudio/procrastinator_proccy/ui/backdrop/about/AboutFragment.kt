@@ -7,17 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.work.*
 import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.databinding.FragmentAboutBinding
-import com.kehnestudio.procrastinator_proccy.databinding.FragmentLoginBinding
-import com.kehnestudio.procrastinator_proccy.ui.backdrop.myaccount.MyAccountViewModel
 import com.kehnestudio.procrastinator_proccy.utilities.UploadWorker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_about.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
