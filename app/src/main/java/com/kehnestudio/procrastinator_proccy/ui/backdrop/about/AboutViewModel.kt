@@ -16,9 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AboutViewModel @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
-
-    val readFromDataStore = dataStoreRepository.readFromDataStore.asLiveData()
 
 }

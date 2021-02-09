@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -45,6 +46,8 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
         super.onViewCreated(view, savedInstanceState)
         mAuth = FirebaseAuth.getInstance()
 
+        readFromDataStore()
+
         binding.btnLogout.setOnClickListener {
             logout()
 
@@ -67,6 +70,16 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
             nav_host_fragment.findNavController().navigate(R.id.fragment_login)
             Toast.makeText(requireActivity(), "Logged Out", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun readFromDataStore(){
+        viewModel.readFromDataStore?.observe(viewLifecycleOwner, Observer {
+            var text = it
+            if (text.equals("none")) {
+                text = getString(R.string.unknown)
+            }
+            binding.textViewLastSync.text = getString(R.string.last_synchronisation_attempt, text)
+        })
     }
 
     override fun onDestroyView() {

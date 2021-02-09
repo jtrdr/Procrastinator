@@ -43,21 +43,12 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        readFromDataStore()
         binding.textViewAbout.setOnClickListener {
             sendPeriodicWorkRequest()
         }
     }
 
-    private fun readFromDataStore(){
-        viewModel.readFromDataStore?.observe(viewLifecycleOwner, Observer {
-            var text = it
-            if (text.equals("none")) {
-                text = getString(R.string.unknown)
-            }
-            binding.textViewAbout.text = getString(R.string.last_synchronisation_attempt, text)
-        })
-    }
+
 
     private fun sendPeriodicWorkRequest() {
 

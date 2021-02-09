@@ -8,10 +8,10 @@
     tools:context=".ui.backdrop.myaccount.MyAccountFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView_last_sync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="My Account"
+        app:layout_constraintBottom_toTopOf="@+id/btn_logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
