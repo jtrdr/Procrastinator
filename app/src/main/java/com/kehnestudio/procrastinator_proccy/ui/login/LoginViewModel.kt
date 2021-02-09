@@ -8,6 +8,8 @@ import com.kehnestudio.procrastinator_proccy.data.offline.User
 import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,5 +37,11 @@ class LoginViewModel @Inject constructor(
     fun loadDataFromFireStore(){
         getUser()
     }
+
+    private fun delete() = CoroutineScope(Dispatchers.IO).launch {
+        userRepository.delete()
+    }
+
+    fun deleteAll() = delete()
 
 }

@@ -15,13 +15,8 @@ interface UserDao {
     @Query("SELECT SUM(score) FROM score_table where userId =:uid")
     fun getSumOfDailyScore(uid: String): LiveData<Long>
 
-    /** Examples
-    @Query("SELECT name FROM user_table WHERE id = :uid")
-    fun getUserName(uid: String): LiveData<String>
-
-    @Query("SELECT totalScore FROM user_table WHERE id = :uid")
-    fun getTotalScore(uid: String): LiveData<Int>
-     **/
+    @Query("SELECT userId FROM user_table")
+    fun getUserId(): LiveData<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: User)

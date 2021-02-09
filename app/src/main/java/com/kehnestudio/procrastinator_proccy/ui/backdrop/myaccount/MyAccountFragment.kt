@@ -44,7 +44,6 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mAuth = FirebaseAuth.getInstance()
-        //viewModel.saveDataIntoFirestore()
 
         binding.btnLogout.setOnClickListener {
             logout()
@@ -55,7 +54,6 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun logout(){
 
-        viewModel.deleteAll()
         val mGoogleSignInClient: GoogleSignInClient
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))

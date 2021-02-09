@@ -8,6 +8,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kehnestudio.procrastinator_proccy.data.offline.UserDao
 import com.kehnestudio.procrastinator_proccy.data.offline.UserDatabase
+import com.kehnestudio.procrastinator_proccy.repositories.DataStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
 import dagger.Module
@@ -61,9 +62,10 @@ object AppModule {
     fun provideFireStoreRepository(
         userRepository: UserRepository,
         rootRef: CollectionReference,
-        firebaseAuth: FirebaseAuth
+        firebaseAuth: FirebaseAuth,
+        dataStoreRepository: DataStoreRepository
     ):FireStoreRepository{
-        return FireStoreRepository(userRepository,rootRef, firebaseAuth)
+        return FireStoreRepository(userRepository,rootRef, firebaseAuth, dataStoreRepository)
     }
 
     @Singleton
@@ -77,6 +79,12 @@ object AppModule {
     @Provides
     @Singleton
     fun providesApplicationScope() = CoroutineScope(SupervisorJob())
+
+    @Provides
+    @Singleton
+    fun provideDataStoreRepository(
+        app: Application
+    ) = DataStoreRepository(app)
 
 }
 

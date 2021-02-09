@@ -13,14 +13,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.*
 import javax.inject.Inject
 
 
 class FireStoreRepository @Inject constructor(
     private val userRepository: UserRepository,
     private val userRef: CollectionReference,
-    private val mAuth: FirebaseAuth
+    private val mAuth: FirebaseAuth,
+    private val dataStoreRepository: DataStoreRepository
 ) {
 
 
@@ -55,6 +58,7 @@ class FireStoreRepository @Inject constructor(
                                 user.name,
                                 user.userId
                             )
+                            saveTimeToDataStore()
                         }
                         .addOnFailureListener {
                             Timber.d("Failed to add user to Firestore%s", it.toString())
@@ -95,4 +99,11 @@ class FireStoreRepository @Inject constructor(
                 Timber.d("FirestoreRepository getUser failed with %s", exception.toString())
             }
     }
+
+    private fun saveTimeToDataStore() = CoroutineScope(Dispatchers.IO)
+        .launch {
+            val time = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+            val currentTime = time.format(Date())
+            dataStoreRepository.saveToDataStore(currentTime)
+        }
 }
