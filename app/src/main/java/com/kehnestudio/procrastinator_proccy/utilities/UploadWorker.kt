@@ -5,12 +5,11 @@ import android.os.Build
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.text.SimpleDateFormat
-import java.util.*
 
 @HiltWorker
 class UploadWorker @AssistedInject constructor(
@@ -26,17 +25,8 @@ class UploadWorker @AssistedInject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     override fun doWork(): Result {
         return try {
-
-            val time = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
-            val currentTime = time.format(Date())
-
-            val outputData: Data = Data.Builder()
-                .putString(KEY_WORKER, currentTime)
-                .build()
-
             fireStoreRepository.updateUserInFireStore()
-
-            Result.success(outputData)
+            Result.success()
         } catch (e: Exception) {
             Result.failure()
         }

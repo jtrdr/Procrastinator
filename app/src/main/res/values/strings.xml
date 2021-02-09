@@ -17,6 +17,8 @@
     <string name="bottom_navigation_goals_button">Proccy</string>
     <string name="bottom_navigation_overview_button">Overview</string>
     <string name="progress_fragment_display_date">Today</string>
+    <string name="last_synchronisation_attempt">"Last Backup: %1$s"</string>
+    <string name="unknown">"Unknown"</string>
 
     <string name="qe1">In a quiet place?</string>
     <string name="qe2">Are you outside?</string>

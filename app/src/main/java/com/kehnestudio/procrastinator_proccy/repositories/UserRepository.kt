@@ -15,11 +15,13 @@ class UserRepository @Inject constructor(
 
     fun getSpecificDailyScore(uid:String, date: Date) = userDao.getSpecificDailyScore(uid, date)
 
-    fun getUserWithScoreHistoryFirestore(uid: String) = userDao.getSpecificUserFireStore(uid)
+    fun getUserWithScoreHistoryFirestore() = userDao.getSpecificUserFireStore()
 
-    fun getDailyScoreHistoryForFireStore(uid: String) = userDao.getDailyScoreHistory(uid)
+    fun getDailyScoreHistoryForFireStore() = userDao.getDailyScoreHistory()
 
     fun getSumOfDailyScore(uid: String) = userDao.getSumOfDailyScore(uid)
+
+    fun getUserId() = userDao.getUserId()
 
     suspend fun insertScore(scoreHistory: ScoreHistory) {
         userDao.insertScore(scoreHistory)
@@ -29,9 +31,9 @@ class UserRepository @Inject constructor(
         userDao.insert(user)
     }
 
-    suspend fun delete() {
-        userDao.deleteAllHistory()
-        userDao.deleteAllUsers()
+    suspend fun delete(uid: String) {
+        userDao.deleteAllHistory(uid)
+        userDao.deleteAllUsers(uid)
     }
 
 }

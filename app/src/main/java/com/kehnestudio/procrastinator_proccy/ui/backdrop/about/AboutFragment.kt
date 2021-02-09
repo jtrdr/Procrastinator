@@ -2,52 +2,49 @@ package com.kehnestudio.procrastinator_proccy.ui.backdrop.about
 
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.work.*
 import com.kehnestudio.procrastinator_proccy.R
+import com.kehnestudio.procrastinator_proccy.databinding.FragmentAboutBinding
 import com.kehnestudio.procrastinator_proccy.utilities.UploadWorker
-import kotlinx.android.synthetic.main.fragment_about.*
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 
-
+@AndroidEntryPoint
 class AboutFragment : Fragment(R.layout.fragment_about) {
+
+    private var _binding: FragmentAboutBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: AboutViewModel by viewModels()
 
     companion object {
         const val KEY_VALUE = "key_count"
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAboutBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textView_about.setOnClickListener {
-            sendPeriodicWorkRequest()
+        binding.textViewAbout.setOnClickListener {
+            viewModel.sendPeriodicWorkRequest(requireContext())
         }
     }
 
-    private fun sendPeriodicWorkRequest() {
-
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val oneTimeWorkRequest = OneTimeWorkRequest
-            .Builder(UploadWorker::class.java)
-            .setConstraints(constraints)
-            .build()
-
-        val workManager: WorkManager = WorkManager
-            .getInstance(requireActivity())
-
-        workManager.enqueue(oneTimeWorkRequest)
-
-        workManager.getWorkInfoByIdLiveData(oneTimeWorkRequest.id)
-            .observe(viewLifecycleOwner, Observer {
-                if(it.state.isFinished){
-                    val data = it.outputData
-                    val dateAndTime = data.getString(UploadWorker.KEY_WORKER)
-                    textView_about.text = dateAndTime
-                }
-            })
+    override fun onDestroyView() {
+        super.onDestroyView()
+        //clears reference to binding, view is cleaned up in memory
+        _binding = null
     }
 }

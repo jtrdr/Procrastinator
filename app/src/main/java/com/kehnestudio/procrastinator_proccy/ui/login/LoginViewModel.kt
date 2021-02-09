@@ -8,18 +8,17 @@ import com.kehnestudio.procrastinator_proccy.data.offline.User
 import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    @Nullable private val fireStoreRepository: FireStoreRepository,
-    mAuth: FirebaseAuth
+    @Nullable private val fireStoreRepository: FireStoreRepository
 ) : ViewModel() {
-
-
-    private var uid = mAuth.currentUser?.uid
 
     private fun insert(user: User) = viewModelScope.launch {
         userRepository.insert(user)
@@ -28,12 +27,22 @@ class LoginViewModel @Inject constructor(
         insert(User(id, name))
     }
 
-    private fun getUser(){
-        uid?.let { fireStoreRepository.loadUserFromFireStore(it) }
+    private fun getUserFromFireStore(uid: String){
+        Timber.d("STEP 2")
+        fireStoreRepository.loadUserFromFireStore(uid)
     }
 
-    fun loadDataFromFireStore(){
-        getUser()
+    fun loadDataFromFireStore(uid: String){
+        Timber.d("STEP 1")
+        getUserFromFireStore(uid)
     }
+
+    fun getUserId() = userRepository.getUserId()
+
+    private fun delete(uid: String) = CoroutineScope(Dispatchers.IO).launch {
+        userRepository.delete(uid)
+    }
+
+    fun deleteAll(uid: String) = delete(uid)
 
 }

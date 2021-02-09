@@ -15,13 +15,8 @@ interface UserDao {
     @Query("SELECT SUM(score) FROM score_table where userId =:uid")
     fun getSumOfDailyScore(uid: String): LiveData<Long>
 
-    /** Examples
-    @Query("SELECT name FROM user_table WHERE id = :uid")
-    fun getUserName(uid: String): LiveData<String>
-
-    @Query("SELECT totalScore FROM user_table WHERE id = :uid")
-    fun getTotalScore(uid: String): LiveData<Int>
-     **/
+    @Query("SELECT userId FROM user_table")
+    fun getUserId(): LiveData<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: User)
@@ -39,21 +34,21 @@ interface UserDao {
     @Update
     suspend fun updateScore(scoreHistory: ScoreHistory)
 
-    @Query("DELETE FROM user_table")
-    suspend fun deleteAllUsers()
+    @Query("DELETE FROM user_table WHERE userId =:uid")
+    suspend fun deleteAllUsers(uid: String)
 
-    @Query("DELETE FROM score_table")
-    suspend fun deleteAllHistory()
+    @Query("DELETE FROM score_table WHERE userId =:uid")
+    suspend fun deleteAllHistory(uid: String)
 
     /**
      * FIRESTORE
      */
 
     @Transaction
-    @Query("SELECT date, score FROM score_table where userId =:uid")
-    fun getDailyScoreHistory(uid: String): List<ScoreHistoryFirestore>
+    @Query("SELECT date, score FROM score_table")
+    fun getDailyScoreHistory(): List<ScoreHistoryFirestore>
 
-    @Query("SELECT * FROM user_table WHERE userId = :uid")
-    fun getSpecificUserFireStore(uid: String): User
+    @Query("SELECT * FROM user_table")
+    fun getSpecificUserFireStore(): User
 
 }

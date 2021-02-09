@@ -16,10 +16,9 @@ import com.kehnestudio.procrastinator_proccy.Constants.ACTION_STOP_SERVICE
 import com.kehnestudio.procrastinator_proccy.Constants.EXTRA_TIMER_LENGTH
 import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.databinding.FragmentGoalsBinding
-import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
 import com.kehnestudio.procrastinator_proccy.services.TimerService
+import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class GoalsFragment : Fragment() {

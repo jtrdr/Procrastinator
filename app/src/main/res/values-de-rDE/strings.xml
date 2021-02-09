@@ -24,4 +24,6 @@
     <string name="qt2">Hörst du Musik?</string>
     <string name="qt3">Unter einer Decke?</string>
     <string name="qt4">Trinkst du Kaffee oder Tee?</string>
+    <string name="last_synchronisation_attempt">Letzte Sicherung: %1$s</string>
+    <string name="unknown">Unbekannt</string>
 </resources>
