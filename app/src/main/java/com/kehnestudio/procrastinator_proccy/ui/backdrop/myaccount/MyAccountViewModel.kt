@@ -26,7 +26,6 @@ class MyAccountViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var uid = firebaseAuth.currentUser?.uid
 
     val readFromDataStore = dataStoreRepository.readFromDataStore.asLiveData()
 
@@ -36,10 +35,9 @@ class MyAccountViewModel @Inject constructor(
         result.value = null
     }
 
-    fun sendOneTimeWorkRequest(context: Context) {
+    fun saveDataOnLogout(context: Context) {
 
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
         val oneTimeWorkRequest = OneTimeWorkRequest
@@ -53,10 +51,22 @@ class MyAccountViewModel @Inject constructor(
         workManager.enqueueUniqueWork("Update", ExistingWorkPolicy.REPLACE, oneTimeWorkRequest)
     }
 
-    fun deleteAccount() =
-        CoroutineScope(Dispatchers.IO).launch {
-            uid?.let { fireStoreRepository.deleteFireStoreUser(it) }
-            uid?.let { userRepository.delete(it) }
-        }
+    lateinit var deleteAcountWorkRequest: OneTimeWorkRequest
+
+    fun deleteAccount(context: Context){
+
+        val constraints = Constraints.Builder()
+            .build()
+
+        deleteAcountWorkRequest = OneTimeWorkRequest
+            .Builder(DeleteAccountWorker::class.java)
+            .setConstraints(constraints)
+            .build()
+
+        val workManager: WorkManager = WorkManager
+            .getInstance(context)
+
+        workManager.enqueue(deleteAcountWorkRequest)
+    }
 }
 
