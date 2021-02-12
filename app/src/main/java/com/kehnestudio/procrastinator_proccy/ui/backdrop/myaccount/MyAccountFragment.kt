@@ -31,8 +31,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
-
-    private lateinit var mAuth: FirebaseAuth
+    
     private var _binding: FragmentMyaccountBinding? = null
 
     private val binding get() = _binding!!

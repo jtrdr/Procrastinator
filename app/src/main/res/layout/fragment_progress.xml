@@ -113,30 +113,20 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardView_calendar"
+        <com.kizitonwose.calendarview.CalendarView
+            android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="4dp"
+            app:cv_dayViewResource="@layout/calendar_day_layout"
+            app:cv_inDateStyle="none"
+            app:cv_monthHeaderResource="@layout/calendar_month_header_layout"
+            app:cv_orientation="horizontal"
+            app:cv_outDateStyle="none"
+            app:cv_scrollMode="paged"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView_progress_circle">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <CalendarView
-                    android:id="@+id/calendarView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </FrameLayout>
-        </com.google.android.material.card.MaterialCardView>
+            app:layout_constraintTop_toBottomOf="@+id/cardView_progress_circle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
