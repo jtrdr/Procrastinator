@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
             binding.textViewDailyScoreDisplay.text = getString(R.string.textview_score_daily, score)
         })
 
-        viewModel.getSpecificUser()?.observe(viewLifecycleOwner, Observer {
+        viewModel.getSpecificUser()?.observe(viewLifecycleOwner, {
             binding.textViewDisplayname.text = getString(R.string.home_fragment_displayname, it.name)
         })
 
