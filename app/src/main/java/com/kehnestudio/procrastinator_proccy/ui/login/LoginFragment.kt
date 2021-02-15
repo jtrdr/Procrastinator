@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.databinding.FragmentLoginBinding
+import com.kehnestudio.procrastinator_proccy.utilities.Variables
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_mainactivity.*
 import timber.log.Timber
@@ -57,7 +59,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         })
 
         binding.buttonSignIn.setOnClickListener {
-            signIn()
+
+            if (Variables.isNetworkConnected){
+                signIn()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Cannot login. No Internet connection",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

@@ -11,13 +11,20 @@ class UserRepository @Inject constructor(
     private val userDao: UserDao
 ) {
 
+
+    fun getDailyScores() = userDao.getDailyScores()
+
     fun getSpecificUser(uid: String) = userDao.getSpecificUser(uid)
 
     fun getSpecificDailyScore(uid:String, date: Date) = userDao.getSpecificDailyScore(uid, date)
 
+    fun getDailyScoreHistory() = userDao.getDailyScoreHistory()
+
     fun getUserWithScoreHistoryFirestore() = userDao.getSpecificUserFireStore()
 
-    fun getDailyScoreHistoryForFireStore() = userDao.getDailyScoreHistory()
+    fun getDailyScoreHistoryForFireStore() = userDao.getDailyScoreHistoryFireStore()
+
+
 
     fun getSumOfDailyScore(uid: String) = userDao.getSumOfDailyScore(uid)
 

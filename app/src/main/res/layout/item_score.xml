@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+
+        android:id="@+id/textView_item_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Example Item"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+
+        android:id="@+id/textview_item_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_item_date"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"
+        tools:text="Example Item" />
+
+</RelativeLayout>
