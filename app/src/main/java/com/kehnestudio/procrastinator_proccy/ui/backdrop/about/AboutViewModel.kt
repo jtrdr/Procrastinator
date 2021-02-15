@@ -19,7 +19,7 @@ class AboutViewModel @Inject constructor(
             .build()
 
         val periodicWorkRequest = PeriodicWorkRequest
-            .Builder(UploadWorker::class.java, 1, TimeUnit.DAYS)
+            .Builder(UploadWorker::class.java, 15, TimeUnit.MINUTES)
             .setConstraints(constraints)
             .build()
 
