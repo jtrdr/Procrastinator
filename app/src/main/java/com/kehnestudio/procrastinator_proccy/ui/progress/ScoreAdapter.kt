@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter
 
 class ScoreAdapter : ListAdapter<ScoreHistoryLocalDate, ScoreAdapter.ScoreHistoryViewHolder>(DiffCallback()) {
 
+    val scores = mutableListOf<ScoreHistoryLocalDate>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScoreHistoryViewHolder {
         val binding = ItemScoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ScoreHistoryViewHolder(binding)
@@ -21,20 +23,22 @@ class ScoreAdapter : ListAdapter<ScoreHistoryLocalDate, ScoreAdapter.ScoreHistor
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(viewHolder: ScoreHistoryViewHolder, position: Int) {
-        val currentItem = getItem(position)
-        viewHolder.bind(currentItem)
+
+            viewHolder.bind(scores[position])
     }
+
+    override fun getItemCount(): Int = scores.size
 
     class ScoreHistoryViewHolder(private val binding: ItemScoreBinding) :
         RecyclerView.ViewHolder(binding.root) {
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(scoreHistory: ScoreHistoryLocalDate) {
 
-            binding.apply {
-                textViewItemDate.text = scoreHistory.date.toString()
-                Timber.d(scoreHistory.date.toString())
-                textviewItemScore.text = scoreHistory.score.toString()
-                Timber.d(scoreHistory.score.toString())
+                binding.apply {
+                    textViewItemDate.text = scoreHistory.date.toString()
+                    Timber.d(scoreHistory.date.toString())
+                    textviewItemScore.text = scoreHistory.score.toString()
+                    Timber.d(scoreHistory.score.toString())
             }
         }
     }
