@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import com.google.android.material.slider.Slider
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_START_SERVICE
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_STOP_SERVICE
@@ -19,12 +20,16 @@ import com.kehnestudio.procrastinator_proccy.databinding.FragmentGoalsBinding
 import com.kehnestudio.procrastinator_proccy.services.TimerService
 import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.observeOn
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GoalsFragment : Fragment() {
 
     private var _binding: FragmentGoalsBinding? = null
-    private val binding get()= _binding!!
+    private val binding get() = _binding!!
 
     private val viewModel: GoalsViewModel by viewModels()
 
@@ -53,7 +58,7 @@ class GoalsFragment : Fragment() {
             startTimer()
         }
 
-        binding.buttonReset.setOnClickListener{
+        binding.buttonReset.setOnClickListener {
             stopTimer()
         }
 
@@ -62,7 +67,7 @@ class GoalsFragment : Fragment() {
         }
 
         binding.seekBarTimer.addOnChangeListener { slider, value, fromUser ->
-            startTime = (value.toLong())*60000
+            startTime = (value.toLong()) * 60000
             binding.tvTimeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
         }
 
@@ -79,9 +84,9 @@ class GoalsFragment : Fragment() {
         subscribeToObservers()
     }
 
-    private fun updateGoals(){
-
-        val arrayEnvironment: Array<String> = resources.getStringArray(R.array.questions_environment)
+    private fun updateGoals() {
+        val arrayEnvironment: Array<String> =
+            resources.getStringArray(R.array.questions_environment)
         val arrayTasks: Array<String> = resources.getStringArray(R.array.questions_tasks)
         val randomEnvironment: MutableList<String> = arrayEnvironment.toMutableList()
         val randomTasks: MutableList<String> = arrayTasks.toMutableList()
@@ -89,25 +94,34 @@ class GoalsFragment : Fragment() {
         randomEnvironment.shuffle()
         randomTasks.shuffle()
 
-        binding.checkBox.text = randomEnvironment[0]
-        binding.checkBox2.text = randomEnvironment[1]
-        binding.checkBox3.text = randomTasks[0]
-        binding.checkBox4.text = randomTasks[1]
+        binding.apply {
+            checkBox.text = randomEnvironment[0]
+            checkBox2.text = randomEnvironment[1]
+            checkBox3.text = randomTasks[0]
+            checkBox4.text = randomTasks[1]
+
+            checkBox.isChecked = false
+            checkBox2.isChecked = false
+            checkBox3.isChecked = false
+            checkBox4.isChecked = false
+
+        }
+        saveCheckBoxStates()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun subscribeToObservers() {
 
-        TimerService.mTimerIsRunning.observe(viewLifecycleOwner, Observer {
+        TimerService.mTimerIsRunning.observe(viewLifecycleOwner, {
             mTimerRunning = it
             updateButtons()
         })
 
-        TimerService.timeLeftInMillies.observe(viewLifecycleOwner, Observer {
+        TimerService.timeLeftInMillies.observe(viewLifecycleOwner, {
             timeLeftInMillis = it
             val formattedTime: String = (TimerUtility.getFormattedTimerTime(timeLeftInMillis, true))
 
-            if(mTimerRunning) {
+            if (mTimerRunning) {
                 binding.tvTimeLeft.text = formattedTime
             } else {
                 binding.tvTimeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
@@ -125,10 +139,19 @@ class GoalsFragment : Fragment() {
                 else -> return@Observer
             }
         })
+
+        viewModel.loadCheckBoxStates().observe(viewLifecycleOwner, {
+            binding.checkBox.isChecked = it[0]
+            binding.checkBox2.isChecked = it[1]
+            binding.checkBox3.isChecked = it[2]
+            binding.checkBox4.isChecked = it[3]
+        })
+
     }
 
     private fun startTimer() {
-        if(!mTimerRunning) {
+        if (!mTimerRunning) {
+            saveCheckBoxStates()
             val timeToPassToService = startTime
             val intent = Intent(requireContext(), TimerService::class.java)
             intent.putExtra(EXTRA_TIMER_LENGTH, timeToPassToService)
@@ -140,7 +163,7 @@ class GoalsFragment : Fragment() {
     }
 
     private fun stopTimer() {
-        if(mTimerRunning) {
+        if (mTimerRunning) {
             sendCommandToService(ACTION_STOP_SERVICE)
             viewModel.setTimerIsDoneState(false)
         } else {
@@ -148,9 +171,18 @@ class GoalsFragment : Fragment() {
         }
     }
 
+    private fun saveCheckBoxStates() {
+        viewModel.saveCheckBoxStates(
+                binding.checkBox.isChecked,
+                binding.checkBox2.isChecked,
+                binding.checkBox3.isChecked,
+                binding.checkBox4.isChecked
+            )
+    }
+
     private fun updateButtons() {
 
-        if(!mTimerRunning) {
+        if (!mTimerRunning) {
             binding.buttonStart.visibility = View.VISIBLE
             binding.buttonReset.visibility = View.GONE
             binding.buttonRefresh.visibility = View.VISIBLE
@@ -167,7 +199,7 @@ class GoalsFragment : Fragment() {
     }
 
     private fun sendCommandToService(action: String) =
-        Intent(requireContext(), TimerService::class.java).also{
+        Intent(requireContext(), TimerService::class.java).also {
             it.action = action
             requireContext().startService(it)
         }

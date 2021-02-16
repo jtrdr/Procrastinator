@@ -1,7 +1,6 @@
 package com.kehnestudio.procrastinator_proccy.repositories
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.CollectionReference
@@ -101,7 +100,7 @@ class FireStoreRepository @Inject constructor(
         .launch {
             val time = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
             val currentTime = time.format(Date())
-            dataStoreRepository.saveToDataStore(currentTime)
+            dataStoreRepository.saveSyncDateToDataStore(currentTime)
         }
 
     fun deleteFireStoreUser(uid: String){
