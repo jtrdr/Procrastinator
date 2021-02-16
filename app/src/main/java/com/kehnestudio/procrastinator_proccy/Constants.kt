@@ -12,5 +12,7 @@ object Constants {
     const val NOTIFICATION_CHANNEL_NAME = "Timer"
     const val NOTIFICATION_ID = 1
 
+    const val PERIODIC_WORK_UPLOAD_DATA = "UPLOAD_DATA_TO_FIRESTORE_WORK"
+
 
 }

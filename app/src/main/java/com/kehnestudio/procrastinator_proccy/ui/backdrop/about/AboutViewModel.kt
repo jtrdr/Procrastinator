@@ -3,6 +3,7 @@ package com.kehnestudio.procrastinator_proccy.ui.backdrop.about
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.work.*
+import com.kehnestudio.procrastinator_proccy.Constants.PERIODIC_WORK_UPLOAD_DATA
 import com.kehnestudio.procrastinator_proccy.utilities.UploadWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.concurrent.TimeUnit
@@ -19,7 +20,8 @@ class AboutViewModel @Inject constructor(
             .build()
 
         val periodicWorkRequest = PeriodicWorkRequest
-            .Builder(UploadWorker::class.java, 15, TimeUnit.MINUTES)
+            .Builder(UploadWorker::class.java, 1, TimeUnit.HOURS)
+            .addTag("UploadJob")
             .setConstraints(constraints)
             .build()
 
@@ -27,7 +29,7 @@ class AboutViewModel @Inject constructor(
             .getInstance(context)
 
         workManager.enqueueUniquePeriodicWork(
-            "com.kehnestudio.procrastinator_proccy.ui.backdrop.about",
+            PERIODIC_WORK_UPLOAD_DATA,
             ExistingPeriodicWorkPolicy.KEEP,
             periodicWorkRequest)
     }

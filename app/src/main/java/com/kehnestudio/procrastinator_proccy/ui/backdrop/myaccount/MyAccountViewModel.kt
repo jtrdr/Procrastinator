@@ -20,12 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyAccountViewModel @Inject constructor(
-    private val userRepository: UserRepository,
     private val dataStoreRepository: DataStoreRepository,
     @Nullable private val fireStoreRepository: FireStoreRepository
 ) : ViewModel() {
-
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     val readFromDataStore = dataStoreRepository.readFromDataStore.asLiveData()
 

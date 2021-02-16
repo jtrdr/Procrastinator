@@ -14,11 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val mAuth: FirebaseAuth
 ) : ViewModel(), Observable {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var uid = firebaseAuth.currentUser?.uid
+    private var uid = mAuth.currentUser?.uid
 
     fun getSpecificUser() = uid?.let { userRepository.getSpecificUser(it) }
 

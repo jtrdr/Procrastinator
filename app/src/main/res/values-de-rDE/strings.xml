@@ -15,7 +15,7 @@
     <string name="bottom_navigation_home_button">Start</string>
     <string name="bottom_navigation_goals_button">Proccy</string>
     <string name="bottom_navigation_overview_button">Übersicht</string>
-    <string name="progress_fragment_display_date">Heute</string>
+    <string name="progress_fragment_today">Heute</string>
     <string name="qe1">An einem ruhigen Ort?</string>
     <string name="qe2">Bist du draußen?</string>
     <string name="qe3">Siehst du Natur?</string>
@@ -26,4 +26,5 @@
     <string name="qt4">Trinkst du Kaffee oder Tee?</string>
     <string name="last_synchronisation_attempt">Letzte Sicherung: %1$s</string>
     <string name="unknown">Unbekannt</string>
+    <string name="top_app_bar_more">Mehr</string>
 </resources>

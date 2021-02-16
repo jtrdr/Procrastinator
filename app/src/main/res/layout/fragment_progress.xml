@@ -37,7 +37,7 @@
                         android:id="@+id/textView_displayday"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Today"
+                        android:text="@string/progress_fragment_today"
                         app:layout_constraintBottom_toTopOf="@+id/progress_bar"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

@@ -62,6 +62,8 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
         val firstMonth = currentMonth.minusMonths(1)
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
 
+        startViewModelObservation()
+
         binding.apply {
             recyclerView.apply {
                 adapter = scoreAdapter
@@ -71,11 +73,6 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
             calendarView.scrollToMonth(currentMonth)
         }
 
-        viewModel.scoreHistory.observe(viewLifecycleOwner) { it ->
-            list = it
-            scoreMap = it.groupBy { it.date }
-            binding.calendarView.notifyDateChanged(LocalDate.now())
-        }
         scoreAdapter.notifyDataSetChanged()
 
         class DayViewContainer(view: View) : ViewContainer(view) {
@@ -170,6 +167,20 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
             }
         }
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun startViewModelObservation() {
+        viewModel.scoreHistory.observe(viewLifecycleOwner) { it ->
+            list = it
+            scoreMap = it.groupBy { it.date }
+            binding.calendarView.notifyDateChanged(LocalDate.now())
+        }
+
+        viewModel.getSpecificDailyScore()?.observe(viewLifecycleOwner){
+            binding.textViewProgress.text = getString(R.string.progress_fragment_progresscircle_text, it)
+            binding.progressBar.progress = it.toInt()
+        }
     }
 
     private fun updateAdapterForDate(date: LocalDate?) {
