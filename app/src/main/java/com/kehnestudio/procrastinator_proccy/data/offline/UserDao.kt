@@ -30,7 +30,7 @@ interface UserDao {
 
     @Transaction
     @Query("SELECT score FROM score_table where userId =:uid AND date =:date")
-    fun getSpecificDailyScore(uid:String, date: Date): LiveData<Long>
+    fun getSpecificDailyScore(uid:String, date: Date): LiveData<Int>
 
     @Transaction
     @Query("SELECT date, score FROM score_table")
