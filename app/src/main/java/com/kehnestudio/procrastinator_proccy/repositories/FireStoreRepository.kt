@@ -11,9 +11,14 @@ import com.kehnestudio.procrastinator_proccy.data.online.ScoreHistoryFirestore
 import com.kehnestudio.procrastinator_proccy.data.online.UserFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.*
 import javax.inject.Inject
 
@@ -21,13 +26,40 @@ import javax.inject.Inject
 class FireStoreRepository @Inject constructor(
     private val userRepository: UserRepository,
     private val userRef: CollectionReference,
-    private val dataStoreRepository: DataStoreRepository,
-)  {
+    private val dataStoreRepository: DataStoreRepository
+) {
 
     var result = MutableLiveData<Boolean>()
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun updateUserInFireStore() {
+    fun updateUserViaLogout() {
+        updateUserInFireStore()
+    }
+
+    private var lastScore: Int? = null
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun updateUserViaWorker() {
+        val localDate = LocalDate.now()
+        val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        val score = userRepository.getDailyScore(date)
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+            lastScore = dataStoreRepository.readLastScoreFromDataStore.first()
+            if (score != 0 && score != lastScore) {
+                updateUserInFireStore()
+                dataStoreRepository.saveLastScoreToDataStore(score)
+            } else {
+                saveTimeToDataStore(false)
+            }
+        }
+
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateUserInFireStore() {
 
         var uid: String? = null
         CoroutineScope(Dispatchers.IO).launch {
@@ -51,7 +83,7 @@ class FireStoreRepository @Inject constructor(
                         user.name,
                         user.userId
                     )
-                    saveTimeToDataStore()
+                    saveTimeToDataStore(true)
                     result.postValue(true)
 
                 }
@@ -67,7 +99,6 @@ class FireStoreRepository @Inject constructor(
         userRef.document(uid).get()
             .addOnSuccessListener { document ->
                 if (document.data != null) {
-                    Timber.d("STEP 3")
                     Timber.d(
                         "Successfully retrieved User from with guid $uid, content: %s",
                         document.data
@@ -83,7 +114,6 @@ class FireStoreRepository @Inject constructor(
                                 )
                             }
                             if (scoreHistory != null) {
-                                Timber.d("STEP 4")
                                 userRepository.insertScore(scoreHistory)
                             }
                         }
@@ -96,14 +126,18 @@ class FireStoreRepository @Inject constructor(
             }
     }
 
-    private fun saveTimeToDataStore() = CoroutineScope(Dispatchers.IO)
+    private fun saveTimeToDataStore(completed: Boolean) = CoroutineScope(Dispatchers.IO)
         .launch {
-            val time = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+            val time = SimpleDateFormat.getDateTimeInstance(1, 2, Locale.getDefault())
             val currentTime = time.format(Date())
-            dataStoreRepository.saveSyncDateToDataStore(currentTime)
+
+            when (completed) {
+                true -> dataStoreRepository.saveSyncDateToDataStore(currentTime)
+                false -> dataStoreRepository.saveSyncDateToDataStore("$currentTime x")
+            }
         }
 
-    fun deleteFireStoreUser(uid: String){
+    fun deleteFireStoreUser(uid: String) {
         userRef.document(uid)
             .delete()
             .addOnSuccessListener { Timber.d("DocumentSnapshot successfully deleted!") }

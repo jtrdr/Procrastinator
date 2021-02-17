@@ -38,12 +38,6 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO Change location of sending the PeriodicWorkRequest for uploading data
-        binding.textViewAbout.setOnClickListener {
-            viewModel.sendPeriodicWorkRequest(requireContext())
-        }
-
-
     }
 
     override fun onDestroyView() {
