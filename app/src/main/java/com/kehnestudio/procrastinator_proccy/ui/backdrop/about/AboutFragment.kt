@@ -37,9 +37,7 @@ class AboutFragment : Fragment(R.layout.fragment_about) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.textViewAbout.setOnClickListener {
-            viewModel.sendPeriodicWorkRequest(requireContext())
-        }
+
     }
 
     override fun onDestroyView() {

@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_bar_item_more"
-        android:contentDescription="More"
-        android:title="More" />
+        android:contentDescription="@string/top_app_bar_more"
+        android:title="@string/top_app_bar_more" />
 </menu>

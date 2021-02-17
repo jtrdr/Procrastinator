@@ -1,7 +1,5 @@
 package com.kehnestudio.procrastinator_proccy.ui.backdrop.myaccount
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,18 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.kehnestudio.procrastinator_proccy.Constants.PERIODIC_WORK_UPLOAD_DATA
 import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.databinding.FragmentMyaccountBinding
 import com.kehnestudio.procrastinator_proccy.utilities.Variables
@@ -53,7 +50,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        readFromDataStore()
+        readLastSynchronisedDateFromDataStore()
 
         binding.btnDeleteAccount.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
@@ -96,6 +93,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
     private fun deleteAccount(){
 
         if (Variables.isNetworkConnected){
+            cancelPeriodicWorkRequestUploadData()
             viewModel.deleteAccount(requireContext())
             navigateToLogin("Deleted Account")
         }
@@ -119,8 +117,13 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
 
         mGoogleSignInClient.signOut().addOnCompleteListener(requireActivity()){
             FirebaseAuth.getInstance().signOut()
+            cancelPeriodicWorkRequestUploadData()
             navigateToLogin("Logged out")
         }
+    }
+
+    private fun cancelPeriodicWorkRequestUploadData(){
+        WorkManager.getInstance(requireContext()).cancelUniqueWork(PERIODIC_WORK_UPLOAD_DATA)
     }
 
     private fun navigateToLogin(message: String){
@@ -129,7 +132,7 @@ class MyAccountFragment : Fragment(R.layout.fragment_myaccount) {
     }
 
 
-    private fun readFromDataStore() {
+    private fun readLastSynchronisedDateFromDataStore() {
         viewModel.readFromDataStore.observe(viewLifecycleOwner, Observer {
             var text = it
             if (text.equals("none")) {

@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayNameAndScore()
+        viewModel.sendPeriodicWorkRequest(requireContext())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

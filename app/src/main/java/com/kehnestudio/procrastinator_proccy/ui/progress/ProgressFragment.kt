@@ -1,23 +1,20 @@
 package com.kehnestudio.procrastinator_proccy.ui.progress
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kehnestudio.procrastinator_proccy.R
 import com.kehnestudio.procrastinator_proccy.data.offline.ScoreHistoryLocalDate
-import com.kehnestudio.procrastinator_proccy.databinding.*
+import com.kehnestudio.procrastinator_proccy.databinding.CalendarDayLayoutBinding
+import com.kehnestudio.procrastinator_proccy.databinding.CalendarMonthHeaderLayoutBinding
+import com.kehnestudio.procrastinator_proccy.databinding.FragmentProgressBinding
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
@@ -25,11 +22,11 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
-import timber.log.Timber
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.*
@@ -62,6 +59,8 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
         val firstMonth = currentMonth.minusMonths(1)
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
 
+        startViewModelObservation()
+
         binding.apply {
             recyclerView.apply {
                 adapter = scoreAdapter
@@ -71,11 +70,6 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
             calendarView.scrollToMonth(currentMonth)
         }
 
-        viewModel.scoreHistory.observe(viewLifecycleOwner) { it ->
-            list = it
-            scoreMap = it.groupBy { it.date }
-            binding.calendarView.notifyDateChanged(LocalDate.now())
-        }
         scoreAdapter.notifyDataSetChanged()
 
         class DayViewContainer(view: View) : ViewContainer(view) {
@@ -170,6 +164,24 @@ class ProgressFragment : Fragment(R.layout.fragment_progress) {
             }
         }
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun startViewModelObservation() {
+        viewModel.scoreHistory.observe(viewLifecycleOwner) { it ->
+            list = it
+            scoreMap = it.groupBy { it.date }
+            binding.calendarView.notifyDateChanged(LocalDate.now())
+        }
+
+        viewModel.getSpecificDailyScore()?.observe(viewLifecycleOwner){
+            binding.textViewProgress.text = getString(R.string.progress_fragment_progresscircle_text, it)
+
+            val progress = it*10
+            ObjectAnimator.ofInt(binding.progressBar, "progress", progress)
+                .setDuration(500)
+                .start()
+        }
     }
 
     private fun updateAdapterForDate(date: LocalDate?) {

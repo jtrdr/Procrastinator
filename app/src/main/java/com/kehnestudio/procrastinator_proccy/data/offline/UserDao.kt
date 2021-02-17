@@ -33,6 +33,10 @@ interface UserDao {
     fun getSpecificDailyScore(uid:String, date: Date): LiveData<Int>
 
     @Transaction
+    @Query ("SELECT score FROM score_table where date =:date")
+    fun getDailyScore(date: Date): Int
+
+    @Transaction
     @Query("SELECT date, score FROM score_table")
     fun getDailyScores() : Flow<List<ScoreHistoryLocalDate>>
 

@@ -4,30 +4,23 @@ import android.content.Context
 import androidx.annotation.Nullable
 import androidx.lifecycle.*
 import androidx.work.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestoreSettings
+import com.kehnestudio.procrastinator_proccy.Constants
+import com.kehnestudio.procrastinator_proccy.Constants.WORKER_INPUT_SENDER_LOGOUT
+import com.kehnestudio.procrastinator_proccy.Constants.WORKER_INPUT_SOURCE
 import com.kehnestudio.procrastinator_proccy.repositories.DataStoreRepository
 import com.kehnestudio.procrastinator_proccy.repositories.FireStoreRepository
-import com.kehnestudio.procrastinator_proccy.repositories.UserRepository
 import com.kehnestudio.procrastinator_proccy.utilities.UploadWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class MyAccountViewModel @Inject constructor(
-    private val userRepository: UserRepository,
     private val dataStoreRepository: DataStoreRepository,
     @Nullable private val fireStoreRepository: FireStoreRepository
 ) : ViewModel() {
 
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-    val readFromDataStore = dataStoreRepository.readFromDataStore.asLiveData()
+    val readFromDataStore = dataStoreRepository.readLastSyncDateFromDataStore.asLiveData()
 
     val result = fireStoreRepository.result
 
@@ -40,9 +33,13 @@ class MyAccountViewModel @Inject constructor(
         val constraints = Constraints.Builder()
             .build()
 
+        val data = Data.Builder()
+        data.putString(WORKER_INPUT_SOURCE, WORKER_INPUT_SENDER_LOGOUT)
+
         val oneTimeWorkRequest = OneTimeWorkRequest
             .Builder(UploadWorker::class.java)
             .setConstraints(constraints)
+            .setInputData(data.build())
             .build()
 
         val workManager: WorkManager = WorkManager

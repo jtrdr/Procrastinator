@@ -35,9 +35,9 @@ class TimerService (): LifecycleService() {
     private lateinit var currentNotificationBuilder: NotificationCompat.Builder
 
     companion object {
-        var mTimerIsRunning = MutableLiveData<Boolean>(false)
+        var mTimerIsRunning = MutableLiveData(false)
         val timeLeftInMillies = MutableLiveData<Long>()
-        var mTimerIsDone = MutableLiveData<Boolean>(false)
+        var mTimerIsDone = MutableLiveData(false)
     }
 
     override fun onCreate() {
@@ -46,6 +46,7 @@ class TimerService (): LifecycleService() {
         postInitialValues()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         if (intent.extras != null) {
             passedAction = intent.getStringExtra(ACTION_START_SERVICE)
@@ -113,6 +114,7 @@ class TimerService (): LifecycleService() {
                 timeLeftInMillies.postValue(millisUntilFinished)
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onFinish() {
                 mTimerIsDone.postValue(true)
                 stopService()
@@ -120,6 +122,7 @@ class TimerService (): LifecycleService() {
         }.start()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun stopService() {
         mTimerIsRunning.postValue(false)
         timer?.cancel()

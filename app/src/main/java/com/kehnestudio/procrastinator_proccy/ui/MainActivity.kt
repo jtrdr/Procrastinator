@@ -1,9 +1,13 @@
 package com.kehnestudio.procrastinator_proccy.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -11,6 +15,7 @@ import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_GOALS_FRAGMEN
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_HOME_FRAGMENT
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_SHOW_LOGIN_FRAGMENT
 import com.kehnestudio.procrastinator_proccy.R
+import com.kehnestudio.procrastinator_proccy.services.TimerService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_mainactivity.*
 import timber.log.Timber
@@ -19,6 +24,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mainactivity)
@@ -26,6 +32,16 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             navigateToCorrectFragment(intent)
         }
+        val viewModel: MainActivityViewModel by viewModels()
+
+        TimerService.mTimerIsDone.observe(this, {
+            when (it) {
+                true -> {
+                    viewModel.setTimerIsDoneState(false)
+                    viewModel.updateDailyScore()
+                }
+            }
+        })
 
         bottomNavigationView.setupWithNavController(
             Navigation.findNavController(

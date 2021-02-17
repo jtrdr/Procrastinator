@@ -20,29 +20,19 @@ class LoginViewModel @Inject constructor(
     @Nullable private val fireStoreRepository: FireStoreRepository
 ) : ViewModel() {
 
-    private fun insert(user: User) = viewModelScope.launch {
-        userRepository.insert(user)
-    }
-    fun saveOrUpdateUser(id:String, name: String){
-        insert(User(id, name))
-    }
-
-    private fun getUserFromFireStore(uid: String){
-        Timber.d("STEP 2")
-        fireStoreRepository.loadUserFromFireStore(uid)
+    fun saveOrUpdateUser(id:String, name: String) = viewModelScope.launch {
+        userRepository.insert(User(id, name))
     }
 
     fun loadDataFromFireStore(uid: String){
-        Timber.d("STEP 1")
-        getUserFromFireStore(uid)
+
+        fireStoreRepository.loadUserFromFireStore(uid)
     }
 
     fun getUserId() = userRepository.getUserId()
 
-    private fun delete(uid: String) = CoroutineScope(Dispatchers.IO).launch {
+    fun deleteAll(uid: String) = CoroutineScope(Dispatchers.IO).launch {
         userRepository.delete(uid)
     }
-
-    fun deleteAll(uid: String) = delete(uid)
 
 }
