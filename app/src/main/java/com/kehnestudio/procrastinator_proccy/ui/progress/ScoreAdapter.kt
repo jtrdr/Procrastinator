@@ -36,9 +36,7 @@ class ScoreAdapter : ListAdapter<ScoreHistoryLocalDate, ScoreAdapter.ScoreHistor
 
                 binding.apply {
                     textViewItemDate.text = scoreHistory.date.toString()
-                    Timber.d(scoreHistory.date.toString())
                     textviewItemScore.text = scoreHistory.score.toString()
-                    Timber.d(scoreHistory.score.toString())
             }
         }
     }

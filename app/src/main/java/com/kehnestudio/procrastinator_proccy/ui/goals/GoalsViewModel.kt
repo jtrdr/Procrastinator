@@ -13,11 +13,13 @@ import com.kehnestudio.procrastinator_proccy.services.TimerService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random.Default.nextInt
 
 @HiltViewModel
 class GoalsViewModel @Inject constructor(
@@ -28,34 +30,36 @@ class GoalsViewModel @Inject constructor(
 
     private var uid = mAuth.currentUser?.uid
 
+    fun loadCheckBoxStates() = dataStoreRepository.readCheckBoxStates.asLiveData()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getSpecificDailyScore() = uid?.let {
+        val localDate = LocalDate.now()
+        val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        userRepository.getSpecificDailyScore(it, date)
+    }
+
     fun setTimerIsDoneState(state: Boolean) {
         TimerService.mTimerIsDone.value = state
     }
-
-    private fun insertScore(scoreHistory: ScoreHistory) = viewModelScope.launch {
-        userRepository.insertScore(scoreHistory)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun updateDailyScore(score: Long) {
-        val localDate = LocalDate.now()
-        val date: Date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        uid?.let { ScoreHistory(date, it, score) }?.let { insertScore(it) }
-    }
-
-    fun loadCheckBoxStates() = dataStoreRepository.readCheckBoxStates.asLiveData()
 
     fun saveCheckBoxStates(
         checkBox1: Boolean,
         checkBox2: Boolean,
         checkBox3: Boolean,
         checkBox4: Boolean
-    ) = CoroutineScope(Dispatchers.IO).launch {
-        dataStoreRepository.saveCheckBoxStates(
-            checkBox1,
-            checkBox2,
-            checkBox3,
-            checkBox4
-        )
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStoreRepository.saveCheckBoxStates(
+                checkBox1,
+                checkBox2,
+                checkBox3,
+                checkBox4
+            )
+        }
+    }
+
+    fun saveNewScore(newScore:Int) = CoroutineScope(Dispatchers.IO).launch {
+        dataStoreRepository.saveNewScoreToDataStore(newScore)
     }
 }

@@ -9,8 +9,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.asLiveData
 import com.google.android.material.slider.Slider
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_START_SERVICE
 import com.kehnestudio.procrastinator_proccy.Constants.ACTION_STOP_SERVICE
@@ -20,10 +18,7 @@ import com.kehnestudio.procrastinator_proccy.databinding.FragmentGoalsBinding
 import com.kehnestudio.procrastinator_proccy.services.TimerService
 import com.kehnestudio.procrastinator_proccy.utilities.TimerUtility
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.observeOn
-import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class GoalsFragment : Fragment() {
@@ -36,6 +31,8 @@ class GoalsFragment : Fragment() {
     private var timeLeftInMillis = 0L
     private var startTime = 300000L
     private var mTimerRunning = false
+
+    private var currentScore = 0
 
 
     override fun onCreateView(
@@ -66,7 +63,7 @@ class GoalsFragment : Fragment() {
             updateGoals()
         }
 
-        binding.seekBarTimer.addOnChangeListener { slider, value, fromUser ->
+        binding.seekBarTimer.addOnChangeListener { _, value, _ ->
             startTime = (value.toLong()) * 60000
             binding.tvTimeLeft.text = TimerUtility.getFormattedTimerTime(startTime, true)
         }
@@ -128,30 +125,27 @@ class GoalsFragment : Fragment() {
             }
         })
 
-        TimerService.mTimerIsDone.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                //TODO Do something when Timer has finished the normal way
-
-                true -> {
-                    viewModel.setTimerIsDoneState(false)
-                    viewModel.updateDailyScore(25)
-                }
-                else -> return@Observer
-            }
+        viewModel.getSpecificDailyScore()?.observe(viewLifecycleOwner, {
+            currentScore = it
         })
 
         viewModel.loadCheckBoxStates().observe(viewLifecycleOwner, {
-            binding.checkBox.isChecked = it[0]
-            binding.checkBox2.isChecked = it[1]
-            binding.checkBox3.isChecked = it[2]
-            binding.checkBox4.isChecked = it[3]
+            binding.apply {
+                checkBox.isChecked = it[0]
+                checkBox2.isChecked = it[1]
+                checkBox3.isChecked = it[2]
+                checkBox4.isChecked = it[3]
+            }
         })
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun startTimer() {
+
         if (!mTimerRunning) {
             saveCheckBoxStates()
+            calculateNewScore()
             val timeToPassToService = startTime
             val intent = Intent(requireContext(), TimerService::class.java)
             intent.putExtra(EXTRA_TIMER_LENGTH, timeToPassToService)
@@ -160,6 +154,28 @@ class GoalsFragment : Fragment() {
         } else {
             return
         }
+    }
+
+    private fun calculateNewScore(){
+        val scoreBase = startTime.toInt() / 60000
+        var newScore = currentScore + scoreBase
+
+        Timber.d("ScoreBase: $scoreBase NewScore: $newScore")
+
+        if(binding.checkBox.isChecked){
+            newScore += (3..5).random()
+        }
+        if(binding.checkBox2.isChecked){
+            newScore += (3..5).random()
+        }
+        if(binding.checkBox3.isChecked){
+            newScore += (6..8).random()
+        }
+        if(binding.checkBox4.isChecked){
+            newScore += (6..8).random()
+        }
+        viewModel.saveNewScore(newScore)
+        Timber.d("Current Score: $currentScore ScoreBase: $scoreBase NewScore: $newScore")
     }
 
     private fun stopTimer() {
@@ -173,11 +189,11 @@ class GoalsFragment : Fragment() {
 
     private fun saveCheckBoxStates() {
         viewModel.saveCheckBoxStates(
-                binding.checkBox.isChecked,
-                binding.checkBox2.isChecked,
-                binding.checkBox3.isChecked,
-                binding.checkBox4.isChecked
-            )
+            binding.checkBox.isChecked,
+            binding.checkBox2.isChecked,
+            binding.checkBox3.isChecked,
+            binding.checkBox4.isChecked
+        )
     }
 
     private fun updateButtons() {

@@ -17,6 +17,7 @@ class DataStoreRepository(context: Context) {
     companion object PreferenceKeys {
         val last_sync = stringPreferencesKey("last_synchronisation")
         val last_score = intPreferencesKey("last_score")
+        val new_score = intPreferencesKey("new_score")
         val checkBox1 = booleanPreferencesKey("isChecked1")
         val checkBox2 = booleanPreferencesKey("isChecked2")
         val checkBox3 = booleanPreferencesKey("isChecked3")
@@ -36,6 +37,12 @@ class DataStoreRepository(context: Context) {
     suspend fun saveLastScoreToDataStore(lastScore: Int) {
         dataStore.edit { preference ->
             preference[last_score] = lastScore
+        }
+    }
+
+    suspend fun saveNewScoreToDataStore(newScore: Int) {
+        dataStore.edit { preference ->
+            preference[new_score] = newScore
         }
     }
 
@@ -81,6 +88,19 @@ class DataStoreRepository(context: Context) {
             lastScore
         }
 
+    val readNewScoreFromDataStore: Flow<Int> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                Timber.d("DataStore ${exception.message.toString()}")
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map {
+            val newScore = it[new_score] ?: 0
+            newScore
+        }
 
     val readCheckBoxStates: Flow<MutableList<Boolean>> = dataStore.data
         .catch { exception ->
